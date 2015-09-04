@@ -213,19 +213,20 @@ public class FindSDianFragment extends Fragment
 					.getString(SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
-			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
-				field.getText().clear();
-				field.setInputType(InputType.TYPE_CLASS_NUMBER);
-			} else {
-				field.getText().clear();
-				field.setInputType(InputType.TYPE_CLASS_TEXT);
-			}
 
 			setSearchTitle();
 		}
 	}
 
 	private void setSearchTitle() {
+		if (searchByText.equals(SearchByFragment.EMP_CODE)) {
+			field.getText().clear();
+			field.setInputType(InputType.TYPE_CLASS_NUMBER);
+		} else {
+			field.getText().clear();
+			field.setInputType(InputType.TYPE_CLASS_TEXT);
+		}
+
 		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
 
 	}
@@ -233,15 +234,16 @@ public class FindSDianFragment extends Fragment
 	private CharSequence getSortFilterTitle(String title, String words) {
 
 		SpannableString sb = new SpannableString(title);
-		sb.setSpan(new TextAppearanceSpan(getActivity(),
-				R.style.sort_filer_title), 0, title.length(),
-				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		sb.setSpan(
+				new TextAppearanceSpan(getActivity(), R.style.sort_filer_title),
+				0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		String displayName = words.toUpperCase();
 		SpannableString filterWord = new SpannableString(displayName);
-		filterWord.setSpan(new TextAppearanceSpan(getActivity(),
-				R.style.selected_sort_filter), 0, displayName.length(),
-				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		filterWord.setSpan(
+				new TextAppearanceSpan(getActivity(),
+						R.style.selected_sort_filter),
+				0, displayName.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		return TextUtils.concat(sb, filterWord);
 	}
