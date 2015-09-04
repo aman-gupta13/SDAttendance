@@ -9,18 +9,14 @@
 package main.bindroid.sdattendance;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.parse.FindCallback;
@@ -167,32 +163,32 @@ public class parserActivity extends Activity implements View.OnClickListener {
 				break;
 
 			case R.id.searchby :
-				final Dialog dia = new Dialog(this);
-				dia.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				dia.setContentView(R.layout.filter_dialog_layout);
-				RadioGroup radioGroup = (RadioGroup) dia
-						.findViewById(R.id.radioCategory);
-
-				radioGroup
-						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-
-							@Override
-							public void onCheckedChanged(RadioGroup group,
-									int checkedId) {
-								field.setClickable(true);
-								switch (checkedId) {
-									case R.id.radioName :
-										search = "Name";
-
-										break;
-									case R.id.radioId :
-										search = "Employee Id";
-										break;
-								}
-								searchBy.setText("Search by " + search);
-							}
-						});
-				dia.show();
+//				final Dialog dia = new Dialog(this);
+//				dia.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//				dia.setContentView(R.layout.filter_dialog_layout);
+//				RadioGroup radioGroup = (RadioGroup) dia
+//						.findViewById(R.id.radioCategory);
+//
+//				radioGroup
+//						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//
+//							@Override
+//							public void onCheckedChanged(RadioGroup group,
+//									int checkedId) {
+//								field.setClickable(true);
+//								switch (checkedId) {
+//									case R.id.radioName :
+//										search = "Name";
+//
+//										break;
+//									case R.id.radioId :
+//										search = "Employee Id";
+//										break;
+//								}
+//								searchBy.setText("Search by " + search);
+//							}
+//						});
+//				dia.show();
 				break;
 		}
 	}

@@ -1,9 +1,5 @@
 package main.bindroid.sdattendance;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,19 +10,17 @@ import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.RadioGroup.OnCheckedChangeListener;
-import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
@@ -42,8 +36,9 @@ public class FindSDianFragment extends Fragment
 	private List<FeedItem> list;
 	private BasicListAdapter adapter;
 	private EditText field;
-	private String search = "Name";
+
 	private Button searchBy;
+	String searchByText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,14 +53,7 @@ public class FindSDianFragment extends Fragment
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		initWidget();
-		FragmentManager fragmentManager = getActivity()
-				.getSupportFragmentManager();
-		Bundle bundle = new Bundle();
-		bundle.putString(SearchByFragment.SEARCH_BY_KEY, SearchByFragment.NAME);
-		SearchByFragment searchByFragment = new SearchByFragment();
-		searchByFragment.setArguments(bundle);
-		searchByFragment.setTargetFragment(this, REQUEST_ID);
-		searchByFragment.show(fragmentManager, "searchBy");
+
 	}
 
 	private int REQUEST_ID = 101;
@@ -106,14 +94,14 @@ public class FindSDianFragment extends Fragment
 		Button find = (Button) getView().findViewById(R.id.find);
 		searchBy = (Button) getView().findViewById(R.id.searchby);
 
-		searchBy.setText("Search by Name");
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 		mRecyclerView.setAdapter(adapter);
 		find.setOnClickListener(this);
 		searchBy.setOnClickListener(this);
-
+		searchByText = SearchByFragment.EMP_CODE;
+		setSearchTitle();
 	}
 
 	private void parse(String fieldName, String value) {
@@ -182,54 +170,24 @@ public class FindSDianFragment extends Fragment
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.find :
-				if (search.equalsIgnoreCase("Name"))
+				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
 					parse("EmpName", field.getText().toString());
-				else if (search.equalsIgnoreCase("Employee Id"))
+				else
+					if (searchByText
+							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					parse("EmpCode", field.getText().toString());
 				break;
 
 			case R.id.searchby :
-				final Dialog dia = new Dialog(getActivity());
-				dia.requestWindowFeature(Window.FEATURE_NO_TITLE);
-				dia.setContentView(R.layout.filter_dialog_layout);
-				RadioButton nameButton, employeeIdButton;
-				nameButton = (RadioButton) dia.findViewById(R.id.radioName);
-				employeeIdButton = (RadioButton) dia.findViewById(R.id.radioId);
-				if (search != null && search.equalsIgnoreCase("name")) {
-					nameButton.setChecked(true);
-					employeeIdButton.setChecked(false);
-				} else
-					if (search != null
-							&& search.equalsIgnoreCase("Employee Id")) {
-					nameButton.setChecked(false);
-					employeeIdButton.setChecked(true);
-				}
-				RadioGroup radioGroup = (RadioGroup) dia
-						.findViewById(R.id.radioCategory);
+				FragmentManager fragmentManager = getActivity()
+						.getSupportFragmentManager();
+				Bundle bundle = new Bundle();
+				bundle.putString(SearchByFragment.SEARCH_BY_KEY, searchByText);
+				SearchByFragment searchByFragment = new SearchByFragment();
+				searchByFragment.setArguments(bundle);
+				searchByFragment.setTargetFragment(this, REQUEST_ID);
+				searchByFragment.show(fragmentManager, "searchBy");
 
-				radioGroup.setOnCheckedChangeListener(
-						new OnCheckedChangeListener() {
-
-							@Override
-							public void onCheckedChanged(RadioGroup group,
-									int checkedId) {
-								field.setClickable(true);
-								switch (checkedId) {
-									case R.id.radioName :
-										search = "Name";
-										field.setInputType(
-												InputType.TYPE_CLASS_TEXT);
-										break;
-									case R.id.radioId :
-										field.setInputType(
-												InputType.TYPE_CLASS_NUMBER);
-										search = "Employee Id";
-										break;
-								}
-								searchBy.setText("Search by " + search);
-							}
-						});
-				dia.show();
 				break;
 		}
 	}
@@ -238,10 +196,22 @@ public class FindSDianFragment extends Fragment
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
-			Toast.makeText(getActivity(),
-					"Result Found::" + data.getExtras()
-							.getString(SearchByFragment.SEARCH_BY_KEY),
-					Toast.LENGTH_SHORT).show();
+
+			searchByText = data.getExtras()
+					.getString(SearchByFragment.SEARCH_BY_KEY);
+			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
+				field.getText().clear();
+				field.setInputType(InputType.TYPE_CLASS_NUMBER);
+			} else {
+				field.getText().clear();
+				field.setInputType(InputType.TYPE_CLASS_TEXT);
+			}
+
+			setSearchTitle();
 		}
+	}
+
+	private void setSearchTitle() {
+		searchBy.setText("Search by " + searchByText);
 	}
 }
