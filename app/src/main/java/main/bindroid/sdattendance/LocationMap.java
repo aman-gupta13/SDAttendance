@@ -135,6 +135,17 @@ public class LocationMap {
 		map.put(3068, new Location(43, 140));
 		map.put(3069, new Location(43, 140));
 
+		map.put(3070, new Location(43, 140));
+		map.put(3071, new Location(43, 140));
+		map.put(3072, new Location(43, 140));
+		map.put(3073, new Location(43, 140));
+		map.put(3074, new Location(43, 140));
+		map.put(3075, new Location(43, 140));
+		map.put(3076, new Location(43, 140));
+		map.put(3077, new Location(43, 140));
+		map.put(3078, new Location(43, 140));
+		map.put(3079, new Location(43, 140));
+
 		map.put(3181, new Location(400, 430));
 		map.put(3182, new Location(400, 430));
 		map.put(3183, new Location(400, 430));
