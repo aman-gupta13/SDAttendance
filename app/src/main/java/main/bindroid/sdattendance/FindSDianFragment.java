@@ -1,8 +1,5 @@
 package main.bindroid.sdattendance;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -22,6 +19,9 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
@@ -135,6 +135,7 @@ public class FindSDianFragment extends Fragment
 		 */
 		showProgressbar();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee");
+		query.setLimit(1000);
 		/*
 		 * if (fieldName.equalsIgnoreCase("EmpName")) { //
 		 * query.whereMatches(fieldName, value); } else {
@@ -168,10 +169,12 @@ public class FindSDianFragment extends Fragment
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
 
 					findByName(obj, field.getText().toString());
-				else
-					if (searchByText
-							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				else if (searchByText
+						.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					findById(obj, field.getText().toString());
+				else if (searchByText
+						.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+					findByDept(obj, field.getText().toString());
 				break;
 
 			case R.id.searchby :
@@ -192,8 +195,8 @@ public class FindSDianFragment extends Fragment
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
 
-			searchByText = data.getExtras()
-					.getString(SearchByFragment.SEARCH_BY_KEY);
+			searchByText = data.getExtras().getString(
+					SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
 			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
@@ -218,8 +221,7 @@ public class FindSDianFragment extends Fragment
 	}
 
 	@Override
-	public void onTextChanged(CharSequence charSequence, int i, int i1,
-			int i2) {
+	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
 	}
 
@@ -232,6 +234,9 @@ public class FindSDianFragment extends Fragment
 				findByName(obj, field.getText().toString());
 			else if (searchByText.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 				findById(obj, field.getText().toString());
+			else if (searchByText.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+				findByDept(obj, field.getText().toString());
+
 		}
 
 	}
@@ -260,6 +265,26 @@ public class FindSDianFragment extends Fragment
 			ParseObject userObject = objects.get(i);
 			String code = userObject.getString("EmpCode");
 			if (code.equalsIgnoreCase(str)) {
+				FeedItem item = new FeedItem();
+				item.setEmpName(userObject.getString("EmpName"));
+				item.setEmpId(userObject.getString("EmpCode"));
+				item.setEmpDept(userObject.getString("EmpDepartment"));
+
+				item.setEmpSeat(userObject.getString("EmpSeat"));
+				item.setEmpMobile("+911244330082");
+				list.add(item);
+				adapter.notifyDataSetChanged();
+			}
+
+		}
+
+	}
+
+	private void findByDept(List<ParseObject> objects, String str) {
+		for (int i = 0; i < objects.size(); i++) {
+			ParseObject userObject = objects.get(i);
+			String dept = userObject.getString("EmpDepartment");
+			if (dept.equalsIgnoreCase(str)) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
