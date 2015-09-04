@@ -93,6 +93,7 @@ public class DashboardActivity extends AppCompatActivity
 		tabLayout.setupWithViewPager(viewPager);
 		tabLayout.setOnTabSelectedListener(
 				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+				
 	}
 
 	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {

@@ -5,11 +5,17 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 import main.bindroid.sdattendance.beans.SDEmployee;
 
@@ -98,5 +104,41 @@ public class CommonUtils {
 		} else {
 			return null;
 		}
+	}
+
+	public static String getCurrentTime() {
+		final Calendar c = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("h:mm a", Locale.US);
+		format.setTimeZone(c.getTimeZone());
+
+		String myFormatted_time = format.format(c.getTime());
+
+		return myFormatted_time;
+	}
+
+	public static String getMinTime(String lastTime, String startTime) {
+		String time = "";
+		try {
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+			Date date1 = simpleDateFormat.parse(startTime);
+			Date date2 = simpleDateFormat.parse(lastTime);
+			long difference;
+			if (date2.after(date1)) {
+				difference = date2.getTime() - date1.getTime();
+			} else {
+				difference = date1.getTime() - date2.getTime();
+			}
+			int days = (int) (difference / (1000 * 60 * 60 * 24));
+			int hours = (int) ((difference - (1000 * 60 * 60 * 24 * days))
+					/ (1000 * 60 * 60));
+			int min = (int) (difference - (1000 * 60 * 60 * 24 * days)
+					- (1000 * 60 * 60 * hours)) / (1000 * 60);
+			hours = (hours < 0 ? -hours : hours);
+			Log.e("log_tag", "Hours: " + hours + ", Mins: " + min);
+			time = hours + ":" + min;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return time;
 	}
 }
