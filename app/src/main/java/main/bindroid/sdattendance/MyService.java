@@ -81,7 +81,7 @@ public class MyService extends Service {
 
 					@Override
 					public void onExitedRegion(final Region region) {
-//						postNotification(getString(R.string.status_exited_region));
+						// postNotification(getString(R.string.status_exited_region));
 					}
 				});
 	}
@@ -125,7 +125,8 @@ public class MyService extends Service {
 
 	private void postNotification(String msg) {
 		PendingIntent pendingIntent = PendingIntent.getActivities(
-				MyService.this, 0, null, PendingIntent.FLAG_UPDATE_CURRENT);
+				MyService.this, 0, new Intent[]{new Intent()},
+				PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder notification = new NotificationCompat.Builder(
 				MyService.this).setSmallIcon(R.drawable.beacon_gray)
 				.setContentTitle(getString(R.string.last_post_notification))
