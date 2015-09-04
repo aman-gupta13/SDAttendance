@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:padding="16dp"
+    >
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/cv"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            >
+
+            <ImageView
+                android:id="@+id/person_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/profile"
+                />
+
+            <TextView
+                android:id="@+id/person_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/person_photo"
+                android:text="rockers"
+
+                android:textSize="30sp"
+                android:textColor="#000000"
+                />
+
+            <TextView
+                android:id="@+id/person_email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/person_name"
+                android:layout_toRightOf="@+id/person_photo"
+                android:text="sadf@dsaf.com"
+
+                />
+            <ImageView
+                android:id="@+id/phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/phone"
+                android:layout_below="@+id/person_email"
+                android:layout_toRightOf="@+id/person_photo"
+                />
+
+            <TextView
+                android:id="@+id/person_mobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/person_email"
+                android:layout_toRightOf="@+id/phone"
+                android:text="9911460130"
+                />
+            <ImageView
+                android:id="@+id/seat"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:src="@drawable/furniture"
+                android:layout_toLeftOf="@+id/person_seat"
+
+                android:layout_alignParentBottom="true"
+                />
+
+            <TextView
+                android:id="@+id/person_seat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:text="afasd"
+
+                />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>
