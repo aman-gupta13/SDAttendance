@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">SD Attendance</string>
+    <string name="app_name">SD Campus</string>
 
     <string name="action_start">start</string>
     <string name="action_stop">stop</string>
