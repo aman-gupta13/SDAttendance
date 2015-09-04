@@ -17,7 +17,7 @@
             android:text="Automatic Sign In"
             android:textSize="16dp"/>
 
-        <android.widget.Switch
+        <android.widget.Switch android:id="@+id/autoToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

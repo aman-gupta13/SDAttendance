@@ -114,6 +114,7 @@ public class FindSDianFragment extends Fragment
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		adapter.setOnClickListener(this);
 		mRecyclerView.setAdapter(adapter);
 		find.setOnClickListener(this);
 		searchBy.setOnClickListener(this);
@@ -193,6 +194,13 @@ public class FindSDianFragment extends Fragment
 				searchByFragment.setArguments(bundle);
 				searchByFragment.setTargetFragment(this, REQUEST_ID);
 				searchByFragment.show(fragmentManager, "searchBy");
+				break;
+			case R.id.mainView :
+
+				Intent intent = new Intent(getActivity(), FloorActivity.class);
+				intent.putExtra("SeatNumber", view.getTag().toString());
+				startActivity(intent);
+				break;
 
 		}
 	}
@@ -206,36 +214,37 @@ public class FindSDianFragment extends Fragment
 					.getString(SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
-			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
-				field.getText().clear();
-				field.setInputType(InputType.TYPE_CLASS_NUMBER);
-			} else {
-				field.getText().clear();
-				field.setInputType(InputType.TYPE_CLASS_TEXT);
-			}
 
 			setSearchTitle();
 		}
 	}
 
 	private void setSearchTitle() {
+		if (searchByText.equals(SearchByFragment.EMP_CODE)) {
+			field.getText().clear();
+			field.setInputType(InputType.TYPE_CLASS_NUMBER);
+		} else {
+			field.getText().clear();
+			field.setInputType(InputType.TYPE_CLASS_TEXT);
+		}
+
 		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
+		field.requestFocus();
 
 	}
 
 	private CharSequence getSortFilterTitle(String title, String words) {
 
 		SpannableString sb = new SpannableString(title);
-		sb.setSpan(
-				new TextAppearanceSpan(getActivity(), R.style.sort_filer_title),
-				0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		sb.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.sort_filer_title), 0, title.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		String displayName = words.toUpperCase();
 		SpannableString filterWord = new SpannableString(displayName);
-		filterWord.setSpan(
-				new TextAppearanceSpan(getActivity(),
-						R.style.selected_sort_filter),
-				0, displayName.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		filterWord.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.selected_sort_filter), 0, displayName.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		return TextUtils.concat(sb, filterWord);
 	}
@@ -279,6 +288,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpDept(userObject.getString("EmpDepartment"));
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -290,7 +300,7 @@ public class FindSDianFragment extends Fragment
 		for (int i = 0; i < objects.size(); i++) {
 			ParseObject userObject = objects.get(i);
 			String code = userObject.getString("EmpCode");
-			if (code.equalsIgnoreCase(str)) {
+			if (code.startsWith(str)) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
@@ -298,6 +308,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -310,7 +321,7 @@ public class FindSDianFragment extends Fragment
 		for (int i = 0; i < objects.size(); i++) {
 			ParseObject userObject = objects.get(i);
 			String dept = userObject.getString("EmpDepartment");
-			if (dept.equalsIgnoreCase(str)) {
+			if (dept.toLowerCase().contains(str.toLowerCase())) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
@@ -318,6 +329,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}

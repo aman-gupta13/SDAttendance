@@ -16,9 +16,12 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.parse.ParseObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import main.bindroid.sdattendance.utills.CommonUtils;
 
 public class MyService extends Service {
 
@@ -66,21 +69,17 @@ public class MyService extends Service {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						postNotification(getString(R.string.status_entered_region));
-						// new Thread(new Runnable() {
-						// public void run() {
-						// sendData(Globals.URL_PREFIX_CHECKIN);
-						// }
-						// }).start();
+						ParseObject loginData = new ParseObject("SDLoginData");
+						loginData.put(
+								"EmpCode",
+								CommonUtils.getLoggedInUser(
+										getApplicationContext()).getEmpCode());
+						loginData.saveInBackground();
 					}
 
 					@Override
 					public void onExitedRegion(final Region region) {
 						postNotification(getString(R.string.status_exited_region));
-						// new Thread(new Runnable() {
-						// public void run() {
-						// sendData(Globals.URL_PREFIX_CHECKOUT);
-						// }
-						// }).start();
 					}
 				});
 	}
@@ -157,76 +156,4 @@ public class MyService extends Service {
 				notification.build());
 	}
 
-	// private HttpClient createHttpclient() {
-	// HttpParams httpParameters = new BasicHttpParams();
-	//
-	// HttpConnectionParams.setConnectionTimeout(httpParameters, 3000);
-	//
-	// HttpConnectionParams.setSoTimeout(httpParameters, 5000);
-	//
-	// return new DefaultHttpClient(httpParameters);
-	// }
-	//
-	// private void sendData(String url) {
-	// String result;
-	//
-	// HttpClient client = createHttpclient();
-	// HttpContext localContext = new BasicHttpContext();
-	// HttpPost httpPost = new HttpPost(Uri.parse(url).buildUpon().toString());
-	//
-	// String credentials = mPreferences.getString(Globals.PREFERENCE_EMAIL, "")
-	// + ":" +
-	// mPreferences.getString(Globals.PREFERENCE_PASSWORD, "");
-	// String base64EncodedCredentials = Base64
-	// .encodeToString(credentials.getBytes(), Base64.NO_WRAP);
-	// httpPost.addHeader("Authorization", "Basic " + base64EncodedCredentials);
-	//
-	// try {
-	//
-	// result = parseResponse(client.execute(httpPost, localContext));
-	//
-	// Log.d(TAG, "response: " + result);
-	// }
-	// catch (Exception e) {
-	// String msg = DateFormat.getDateTimeInstance().format(new Date()) + ": " +
-	// e.getMessage();
-	// Log.d(TAG, msg);
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// private String parseResponse(HttpResponse response) throws Exception {
-	//
-	// String res = "";
-	//
-	// StringBuilder builder = new StringBuilder();
-	// StatusLine statusLine = response.getStatusLine();
-	// int statusCode = statusLine.getStatusCode();
-	//
-	// HttpEntity entity = response.getEntity();
-	// if(entity != null) {
-	// InputStream content = entity.getContent();
-	// BufferedReader reader = new BufferedReader(new
-	// InputStreamReader(content));
-	// String line;
-	// while ((line = reader.readLine()) != null) {
-	// builder.append(line);
-	// }
-	// }
-	//
-	// if(statusCode == 401) {
-	// // User unauthorized, show Welcome screen
-	//
-	// res = "[401 unauthorized] Response string: " + builder.toString();
-	// }
-	// else if (statusCode >= 200 && statusCode < 300) {
-	// res = "[" + statusCode + "] Response string: " + builder.toString();
-	// } else {
-	// // There was an error, notify user
-	// res = "Failed to make request with status code: " + statusCode + " " +
-	// "Response string: " + builder.toString();
-	// }
-	//
-	// return res;
-	// }
 }
