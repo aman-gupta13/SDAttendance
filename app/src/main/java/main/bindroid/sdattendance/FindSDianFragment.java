@@ -228,6 +228,7 @@ public class FindSDianFragment extends Fragment
 		}
 
 		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
+		field.requestFocus();
 
 	}
 

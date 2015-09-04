@@ -64,13 +64,15 @@ public class DashboardActivity extends AppCompatActivity {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						// Todo: do something when region entered
-						if (CommonUtils
-								.isConnectingToInternet(getApplicationContext())) {
+						if (CommonUtils.isConnectingToInternet(
+								getApplicationContext())) {
 							ParseObject loginData = new ParseObject(
 									"SDLoginData");
-							loginData.put("EmpCode", CommonUtils
-									.getLoggedInUser(getApplicationContext())
-									.getEmpCode());
+							loginData.put("EmpCode",
+									CommonUtils
+											.getLoggedInUser(
+													getApplicationContext())
+											.getEmpCode());
 							loginData.saveInBackground();
 						}
 					}
@@ -99,30 +101,28 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+		tabLayout.setOnTabSelectedListener(
+				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
-
-		int[][] states = new int[][] {
-				new int[] { android.R.attr.state_checked}, // enabled
-				new int[] { android.R.attr.state_enabled}, // enabled
-				new int[] {-android.R.attr.state_enabled}, // disabled
-				new int[] {-android.R.attr.state_checked}, // unchecked
-				new int[] { android.R.attr.state_pressed}  // pressed
+		int[][] states = new int[][]{new int[]{android.R.attr.state_checked}, // enabled
+				new int[]{android.R.attr.state_enabled}, // enabled
+				new int[]{-android.R.attr.state_enabled}, // disabled
+				new int[]{-android.R.attr.state_checked}, // unchecked
+				new int[]{android.R.attr.state_pressed} // pressed
 		};
 
-		int[] colors = new int[] {
-				Color.WHITE,
-				Color.WHITE,Color.WHITE,Color.WHITE,Color.WHITE
+		int[] colors = new int[]{Color.WHITE, Color.WHITE, Color.WHITE,
+				Color.WHITE, Color.WHITE
 
 		};
 
 		ColorStateList myList = new ColorStateList(states, colors);
-		//tabLayout.setTabTextColors(Color.WHITE,Color.WHITE);//.setTabTextColors(myList);
+		// tabLayout.setTabTextColors(Color.WHITE,Color.WHITE);//.setTabTextColors(myList);
 
 	}
 
-
 	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {
+
 		@Override
 		public void onTabChanged(String tabId) {
 

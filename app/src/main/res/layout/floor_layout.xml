@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-    >
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#2196f3">
+        android:background="@color/transparent"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/sdlogo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="10dp"
             android:src="@drawable/sd_icon"
             />
 
@@ -37,7 +36,8 @@
     <main.bindroid.sdattendance.FloorView
         android:id="@+id/floor"
         android:layout_width="wrap_content"
-        android:layout_height="400dp"
+        android:layout_height="325dp"
+        android:background="@color/transparent"
         android:src="@drawable/floor">
     </main.bindroid.sdattendance.FloorView>
 
