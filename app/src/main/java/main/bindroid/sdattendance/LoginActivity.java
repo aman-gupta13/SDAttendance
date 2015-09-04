@@ -23,7 +23,9 @@ import java.util.List;
 import main.bindroid.sdattendance.beans.SDEmployee;
 import main.bindroid.sdattendance.utills.CommonUtils;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity
+		implements
+			OnClickListener {
 
 	private ImageView snapdealImageView;
 	private LinearLayout mainLinearLayout;
@@ -36,27 +38,38 @@ public class LoginActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		if (CommonUtils.getLoggedInUser(getApplicationContext()) != null) {
-			startActivity(new Intent(LoginActivity.this,
-					DashboardActivity.class));
+			startActivity(
+					new Intent(LoginActivity.this, DashboardActivity.class));
 			finish();
 		}
+
+		initViews();
+
+	}
+
+	private void initViews() {
 		snapdealImageView = (ImageView) findViewById(R.id.sdlogo);
 		mainLinearLayout = (LinearLayout) findViewById(R.id.mainLinear);
 		getInText = (TextView) findViewById(R.id.getInTv);
 		empCodeET = (EditText) findViewById(R.id.empCodeET);
 		mProgressBar = (View) findViewById(R.id.materialLoader);
 
-		getInText.setOnClickListener(new OnClickListener() {
+		getInText.setOnClickListener(this);
 
-			@Override
-			public void onClick(View v) {
-				validateDataFromDB();
-			}
-		});
+		showStartUpAnimation();
+	}
+
+	private void showStartUpAnimation() {
 		snapdealImageView.animate().translationYBy(-400).setDuration(2000)
 				.setStartDelay(1000).start();
 		mainLinearLayout.animate().alpha(1).setDuration(4000)
 				.setStartDelay(1000).start();
+	}
+
+	@Override
+	public void onClick(View view) {
+		CommonUtils.hideKeypad(this, empCodeET);
+		validateDataFromDB();
 	}
 
 	public void validateDataFromDB() {
@@ -72,34 +85,36 @@ public class LoginActivity extends AppCompatActivity {
 				query.findInBackground(new FindCallback<ParseObject>() {
 
 					@Override
-					public void
-							done(List<ParseObject> objects, ParseException e) {
+					public void done(List<ParseObject> objects,
+							ParseException e) {
 						Log.d("Parser", "inside done");
-						if (e == null && objects != null && objects.size() > 0) {
+						if (e == null && objects != null
+								&& objects.size() > 0) {
 							showToastMessage("Welcome To Snapdeal "
 									+ objects.get(0).getString("EmpName"));
 							SDEmployee employee = new SDEmployee();
-							employee.setEmpCode(objects.get(0).getString(
-									"EmpCode"));
-							employee.setEmpName(objects.get(0).getString(
-									"EmpName"));
-							employee.setEmpSeat(objects.get(0).getString(
-									"EmpSeat"));
-							employee.setEmpFloor(objects.get(0).getString(
-									"EmpFloor"));
-							employee.setEmpDepartment(objects.get(0).getString(
-									"EmpDepartment"));
-							employee.setEmpUnit(objects.get(0).getString(
-									"EmpUnit"));
-							employee.setEmpTeam(objects.get(0).getString(
-									"EmpTeam"));
-							CommonUtils.setLoggedInUser(
-									getApplicationContext(), employee);
+							employee.setEmpCode(
+									objects.get(0).getString("EmpCode"));
+							employee.setEmpName(
+									objects.get(0).getString("EmpName"));
+							employee.setEmpSeat(
+									objects.get(0).getString("EmpSeat"));
+							employee.setEmpFloor(
+									objects.get(0).getString("EmpFloor"));
+							employee.setEmpDepartment(
+									objects.get(0).getString("EmpDepartment"));
+							employee.setEmpUnit(
+									objects.get(0).getString("EmpUnit"));
+							employee.setEmpTeam(
+									objects.get(0).getString("EmpTeam"));
+							CommonUtils.setLoggedInUser(getApplicationContext(),
+									employee);
 							startActivity(new Intent(LoginActivity.this,
 									DashboardActivity.class));
 							finish();
 						} else {
-							showToastMessage("Oops!! I don't know you!! Sorry!!");
+							showToastMessage(
+									"Oops!! I don't know you!! Sorry!!");
 						}
 					}
 				});
