@@ -23,6 +23,8 @@ import com.estimote.sdk.Region;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.parse.ParseAnalytics;
+
 public class DashboardActivity extends AppCompatActivity {
 
 	private static final int REQUEST_ENABLE_BT = 1234;
@@ -30,6 +32,9 @@ public class DashboardActivity extends AppCompatActivity {
 	private TabLayout tabLayout;
 	private BeaconManager mBeaconManager;
 	private Region mRegion;
+	private TabLayout.Tab tab1;
+	private TabLayout.Tab tab2;
+	private MyPagerAdapter myAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,11 +72,18 @@ public class DashboardActivity extends AppCompatActivity {
 
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
-		tabLayout.addTab(tabLayout.newTab().setText("Attendence"));
-		tabLayout.addTab(tabLayout.newTab().setText("Find SDian"));
+		tab1 = tabLayout.newTab();
+		tab2 = tabLayout.newTab();
+		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
+		tabLayout.addTab(tab1);
+		tabLayout.addTab(tab2);
 		viewPager.setOnPageChangeListener(onPageChangeListener);
-		viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
+		tabLayout
+				.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(
+						viewPager));
+
 	}
 
 	@Override
@@ -168,6 +180,10 @@ public class DashboardActivity extends AppCompatActivity {
 		@Override
 		public void onPageSelected(int position) {
 			viewPager.setCurrentItem(position, true);
+			switch (position) {
+				case 0 :
+					// tabLayout...setTabMode(0);
+			}
 		}
 
 		@Override
@@ -192,6 +208,20 @@ public class DashboardActivity extends AppCompatActivity {
 
 			}
 			return null;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+
+			switch (position) {
+				case 0 :
+					return "Attendence";
+				case 1 :
+					return "Find SDian";
+
+			}
+
+			return super.getPageTitle(position);
 		}
 
 		@Override

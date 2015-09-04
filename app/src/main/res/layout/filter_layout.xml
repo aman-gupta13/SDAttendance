@@ -18,17 +18,27 @@
             android:layout_weight="70"/>
 
         <Button
-            android:id="@+id/filterBtn"
+            android:id="@+id/find"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="filter"
+            android:text="find"
             />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/searchby"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="Search by"
+        />
 
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

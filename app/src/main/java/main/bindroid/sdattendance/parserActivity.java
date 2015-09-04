@@ -1,13 +1,21 @@
+/*
+ * Copyright (c) 2015-present, Parse, LLC.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree. An additional grant
+ * of patent rights can be found in the PATENTS file in the same directory.
+ */
 package main.bindroid.sdattendance;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,16 +33,7 @@ import com.parse.ParseQuery;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass. Activities that contain this fragment
- * must implement the {@link FindSDianFragment.OnFragmentInteractionListener}
- * interface to handle interaction events. Use the
- * {@link FindSDianFragment#newInstance} factory method to create an instance of
- * this fragment.
- */
-public class FindSDianFragment extends Fragment
-		implements
-			View.OnClickListener {
+public class parserActivity extends Activity implements View.OnClickListener {
 
 	private RecyclerView mRecyclerView;
 	private List<FeedItem> list;
@@ -44,59 +43,47 @@ public class FindSDianFragment extends Fragment
 	private Button searchBy;
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setContentView(R.layout.filter_layout);
+		ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
 		list = new ArrayList<FeedItem>();
-		adapter = new BasicListAdapter(getActivity(), list);
-
-	}
-
-	@Override
-	public void onViewCreated(View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+		adapter = new BasicListAdapter(this, list);
 		initWidget();
-	}
 
-	/**
-	 * Use this factory method to create a new instance of this fragment using
-	 * the provided parameters.
-	 *
-	 * @param param1
-	 *            Parameter 1.
-	 * @param param2
-	 *            Parameter 2.
-	 * @return A new instance of fragment AttendenceFragment.
-	 */
-	// TODO: Rename and change types and number of parameters
-	public static FindSDianFragment newInstance(String param1, String param2) {
-		FindSDianFragment fragment = new FindSDianFragment();
-		Bundle args = new Bundle();
-
-		fragment.setArguments(args);
-		return fragment;
-	}
-
-	public FindSDianFragment() {
-		// Required empty public constructor
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.filter_layout, container, false);
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle action bar item clicks here. The action bar will
+		// automatically handle clicks on the Home/Up button, so long
+		// as you specify a parent activity in AndroidManifest.xml.
+		int id = item.getItemId();
+
+		// noinspection SimplifiableIfStatement
+		if (id == R.id.action_settings) {
+			return true;
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void initWidget() {
-		field = (EditText) getView().findViewById(R.id.editText);
+		field = (EditText) findViewById(R.id.editText);
 		field.setClickable(false);
-		Button find = (Button) getView().findViewById(R.id.find);
-		searchBy = (Button) getView().findViewById(R.id.searchby);
+		Button find = (Button) findViewById(R.id.find);
+		searchBy = (Button) findViewById(R.id.searchby);
 		searchBy.setText("Search by Name");
-		mRecyclerView = (RecyclerView) getView()
-				.findViewById(R.id.recyclerview);
-		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+		mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 		mRecyclerView.setAdapter(adapter);
 		find.setOnClickListener(this);
 		searchBy.setOnClickListener(this);
@@ -129,6 +116,9 @@ public class FindSDianFragment extends Fragment
 			public void done(List<ParseObject> objects, ParseException e) {
 
 				if (e == null) {
+					Toast.makeText(parserActivity.this,
+							"size is " + objects.size(), Toast.LENGTH_SHORT)
+							.show();
 					for (int i = 0; i < objects.size(); i++) {
 
 						ParseQuery<ParseObject> query = ParseQuery
@@ -136,22 +126,23 @@ public class FindSDianFragment extends Fragment
 						query.getInBackground(objects.get(i).getObjectId(),
 								new GetCallback<ParseObject>() {
 
-							@Override
-							public void done(ParseObject arg0,
-									ParseException arg1) {
-								// TODO Auto-generated method stub
+									@Override
+									public void done(ParseObject arg0,
+											ParseException arg1) {
+										// TODO Auto-generated method stub
 
-								if (arg1 == null) {
-									FeedItem item = new FeedItem();
-									item.setEmpName(arg0.getString("EmpName"));
-									list.add(item);
-									adapter.notifyDataSetChanged();
+										if (arg1 == null) {
+											FeedItem item = new FeedItem();
+											item.setEmpName(arg0
+													.getString("EmpName"));
+											list.add(item);
+											adapter.notifyDataSetChanged();
 
-								} else {
+										} else {
 
-								}
-							}
-						});
+										}
+									}
+								});
 
 					}
 					// Log.d("score", "Retrieved " + scoreList.size() +
@@ -176,23 +167,25 @@ public class FindSDianFragment extends Fragment
 				break;
 
 			case R.id.searchby :
-				final Dialog dia = new Dialog(getActivity());
+				final Dialog dia = new Dialog(this);
 				dia.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dia.setContentView(R.layout.filter_dialog_layout);
 				RadioGroup radioGroup = (RadioGroup) dia
 						.findViewById(R.id.radioCategory);
 
-				radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				radioGroup
+						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 							@Override
-							public void onCheckedChanged(RadioGroup group, int checkedId) {
+							public void onCheckedChanged(RadioGroup group,
+									int checkedId) {
 								field.setClickable(true);
 								switch (checkedId) {
-									case R.id.radioName:
+									case R.id.radioName :
 										search = "Name";
 
 										break;
-									case R.id.radioId:
+									case R.id.radioId :
 										search = "Employee Id";
 										break;
 								}
@@ -203,5 +196,4 @@ public class FindSDianFragment extends Fragment
 				break;
 		}
 	}
-
 }

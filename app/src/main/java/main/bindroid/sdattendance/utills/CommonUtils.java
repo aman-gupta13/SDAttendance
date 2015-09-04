@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,18 +33,26 @@ public class CommonUtils {
 		return false;
 	}
 
+	public static void hideKeypad(Context context, View view) {
+		if (context != null && view != null) {
+			InputMethodManager imm = (InputMethodManager) context
+					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+		}
+	}
+
 	public static void setLoggedInUser(Context context, SDEmployee employee) {
-		SharedPreferences sharedPreferences = context.getSharedPreferences(
-				"SDAttendance", Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = context
+				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE);
 		Editor editor = sharedPreferences.edit();
-		editor.putString("LoggedInUser", changeEmployeeToJson(employee)
-				.toString());
+		editor.putString("LoggedInUser",
+				changeEmployeeToJson(employee).toString());
 		editor.commit();
 	}
 
 	public static SDEmployee getLoggedInUser(Context context) {
-		SharedPreferences sharedPreferences = context.getSharedPreferences(
-				"SDAttendance", Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = context
+				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE);
 		if (sharedPreferences.getString("LoggedInUser", null) != null) {
 			try {
 				return changeJsonToEmployee(new JSONObject(
