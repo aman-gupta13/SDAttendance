@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
@@ -27,9 +25,12 @@ import com.estimote.sdk.Region;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import main.bindroid.sdattendance.AttendenceFragment.AttendenceTogleStateListener;
 import main.bindroid.sdattendance.utills.CommonUtils;
 
-public class DashboardActivity extends AppCompatActivity {
+public class DashboardActivity extends AppCompatActivity
+		implements
+			AttendenceTogleStateListener {
 
 	private static final int REQUEST_ENABLE_BT = 1234;
 	private ViewPager viewPager;
@@ -80,19 +81,18 @@ public class DashboardActivity extends AppCompatActivity {
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
-		nameTextView.setText(CommonUtils.getLoggedInUser(
-				getApplicationContext()).getEmpName());
+		nameTextView.setText(CommonUtils
+				.getLoggedInUser(getApplicationContext()).getEmpName());
 		tab1 = tabLayout.newTab();
 		tab2 = tabLayout.newTab();
-		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
+		myAdapter = new MyPagerAdapter(this, getSupportFragmentManager());
 		tabLayout.addTab(tab1);
 		tabLayout.addTab(tab2);
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout
-				.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(
-						viewPager));
+		tabLayout.setOnTabSelectedListener(
+				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 	}
 
 	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {
@@ -139,8 +139,8 @@ public class DashboardActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void
-			onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {
 			if (resultCode == Activity.RESULT_OK) {
 				startBeaconService();
@@ -210,17 +210,27 @@ public class DashboardActivity extends AppCompatActivity {
 		}
 	};
 
+	@Override
+	public void onTogleStateChange(boolean isOn) {
+		Toast.makeText(this, "TogleChanged:" + isOn, Toast.LENGTH_SHORT).show();
+	}
+
 	public class MyPagerAdapter extends FragmentPagerAdapter {
 
-		public MyPagerAdapter(FragmentManager fragmentManager) {
+		private AttendenceTogleStateListener attendenceTogleStateListener;
+
+		public MyPagerAdapter(
+				AttendenceTogleStateListener attendenceTogleStateListener,
+				FragmentManager fragmentManager) {
 			super(fragmentManager);
+			this.attendenceTogleStateListener = attendenceTogleStateListener;
 		}
 
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
 				case 0 :
-					return new AttendenceFragment();
+					return new AttendenceFragment(attendenceTogleStateListener);
 				case 1 :
 					return new FindSDianFragment();
 
