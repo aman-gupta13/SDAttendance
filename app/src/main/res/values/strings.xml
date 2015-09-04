@@ -11,8 +11,8 @@
     <string name="waiting_notification">waiting notification</string>
     <string name="device_no_ble">Device does not have Bluetooth Low Energy</string>
     <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
-    <string name="service_started">service started</string>
-    <string name="service_stopped">service stopped</string>
+    <string name="service_started">Magic started!!</string>
+    <string name="service_stopped">Magic stopped!!</string>
     <string name="email">email</string>
     <string name="password">password</string>
     <string name="check_text">Check Me In and Out</string>

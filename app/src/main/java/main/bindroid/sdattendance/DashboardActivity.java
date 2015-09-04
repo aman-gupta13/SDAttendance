@@ -48,32 +48,6 @@ public class DashboardActivity extends AppCompatActivity
 				Globals.MAJOR, Globals.MINOR);
 		// Configure mBeaconManager.
 		mBeaconManager = new BeaconManager(this);
-		// Default values are 5s of scanning and 25s of waiting time to save CPU
-		// cycles.
-		// In order for this demo to be more responsive and immediate we lower
-		// down those values.
-		// mBeaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1),
-		// 0);
-		// mBeaconManager
-		// .setMonitoringListener(new BeaconManager.MonitoringListener() {
-		//
-		// @Override
-		// public void onEnteredRegion(final Region region,
-		// List<Beacon> beacons) {
-		// // Todo: do something when region entered
-		// }
-		//
-		// @Override
-		// public void onExitedRegion(final Region region) {
-		// // Todo: do something when region exited
-		// }
-		//
-		// });
-		// starting beacon service here if bluetooth is on and never started
-		if (!getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
-				.getBoolean("service", false)) {
-			startBeaconService();
-		}
 
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -181,6 +155,8 @@ public class DashboardActivity extends AppCompatActivity
 
 	private void stopBeaconService() {
 		stopService(new Intent(DashboardActivity.this, MyService.class));
+		getSharedPreferences("SDAttendance", Context.MODE_PRIVATE).edit()
+				.putBoolean("service", false).commit();
 		Toast.makeText(DashboardActivity.this,
 				getString(R.string.service_stopped), Toast.LENGTH_SHORT).show();
 	}
@@ -210,7 +186,14 @@ public class DashboardActivity extends AppCompatActivity
 
 	@Override
 	public void onTogleStateChange(boolean isOn) {
-		Toast.makeText(this, "TogleChanged:" + isOn, Toast.LENGTH_SHORT).show();
+		// starting beacon service here if bluetooth is on and never started
+		if (isOn
+				&& !getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
+						.getBoolean("service", false)) {
+			startBeaconService();
+		} else {
+			stopBeaconService();
+		}
 	}
 
 	public class MyPagerAdapter extends FragmentPagerAdapter {

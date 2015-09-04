@@ -1,5 +1,6 @@
 package main.bindroid.sdattendance;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -80,15 +81,19 @@ public class AttendenceFragment extends Fragment {
 				attendenceTogleStateListener.onTogleStateChange(b);
 			}
 		});
+		if (getActivity().getSharedPreferences("SDAttendance",
+				Context.MODE_PRIVATE).getBoolean("service", false)) {
+			toggle.setChecked(true);
+		}
 		return view;
 	}
 
 	private void callNetworkRequestForData() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDLoginData");
-		Log.d("empcode",
-				CommonUtils.getLoggedInUser(getActivity()).getEmpCode());
-		query.whereEqualTo("EmpCode",
-				CommonUtils.getLoggedInUser(getActivity()).getEmpCode());
+		Log.d("empcode", CommonUtils.getLoggedInUser(getActivity())
+				.getEmpCode());
+		query.whereEqualTo("EmpCode", CommonUtils
+				.getLoggedInUser(getActivity()).getEmpCode());
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
