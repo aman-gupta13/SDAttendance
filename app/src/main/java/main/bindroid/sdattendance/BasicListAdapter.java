@@ -54,6 +54,7 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 			holder.dept.setText(feedItem.getEmpDept());
 			holder.name.setText(feedItem.getEmpName());
 			holder.seat.setText(feedItem.getEmpSeat());
+			holder.ext.setText(feedItem.getExt());
 			holder.itemView.setOnClickListener(new OnClickListener() {
 
 				@Override
