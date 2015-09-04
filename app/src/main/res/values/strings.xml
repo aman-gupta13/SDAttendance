@@ -18,4 +18,8 @@
     <string name="check_text">Check Me In and Out</string>
     <string name="error_email">insert an email</string>
     <string name="error_password">insert a password</string>
+    <string name="title_activity_login">LoginActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_dahsboard">DahsboardActivity</string>
 </resources>
