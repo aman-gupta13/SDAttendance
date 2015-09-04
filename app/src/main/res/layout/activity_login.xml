@@ -1,70 +1,87 @@
-<RelativeLayout
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="main.bindroid.sdattendance.LoginActivity">
+    android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/sdlogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/material_logo"
-        android:visibility="visible"/>
-
-    <LinearLayout
-        android:id="@+id/mainLinear"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:alpha="0"
-        android:gravity="center"
-        android:orientation="vertical"
-        >
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        tools:context="main.bindroid.sdattendance.LoginActivity">
 
-        <EditText android:id="@+id/empCodeET"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:hint="Enter your Employee Code"
-            android:textSize="20dp"/>
-
-
-        <!--android:foreground="?cardItemForeground"-->
-        <android.support.v7.widget.CardView
-            android:id="@+id/signInsignUpView"
+        <ImageView
+            android:id="@+id/sdlogo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/theme_accent"
-            app:cardCornerRadius="@dimen/get_customer_id_corner_radius">
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/material_logo"
+            android:visibility="visible"/>
+
+        <LinearLayout
+            android:id="@+id/mainLinear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:alpha="0"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+
+            <EditText android:id="@+id/empCodeET"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginLeft="25dp"
+                      android:layout_marginRight="25dp"
+                      android:digits="0123456789"
+                      android:hint="Enter your Employee Code"
+                      android:inputType="number"
+                      android:textSize="20dp"/>
 
 
-            <TextView
-                android:id="@+id/getInTv"
+            <!--android:foreground="?cardItemForeground"-->
+            <android.support.v7.widget.CardView
+                android:id="@+id/signInsignUpView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
-                android:text="Get In"
-                android:textColor="@color/white"
-                android:textSize="20sp"/>
-
-        </android.support.v7.widget.CardView>
+                android:layout_marginTop="25dp"
+                app:cardBackgroundColor="@color/theme_accent"
+                app:cardCornerRadius="@dimen/get_customer_id_corner_radius">
 
 
-    </LinearLayout>
+                <TextView
+                    android:id="@+id/getInTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:text="GET IN"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"/>
+
+            </android.support.v7.widget.CardView>
 
 
-</RelativeLayout>
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/materialLoader"
+        layout="@layout/material_loader_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+</FrameLayout>

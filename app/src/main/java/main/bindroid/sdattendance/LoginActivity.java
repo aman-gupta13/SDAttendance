@@ -29,6 +29,7 @@ public class LoginActivity extends AppCompatActivity {
 	private LinearLayout mainLinearLayout;
 	private TextView getInText;
 	private EditText empCodeET;
+	private View mProgressBar;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
 		mainLinearLayout = (LinearLayout) findViewById(R.id.mainLinear);
 		getInText = (TextView) findViewById(R.id.getInTv);
 		empCodeET = (EditText) findViewById(R.id.empCodeET);
+		mProgressBar = (View) findViewById(R.id.materialLoader);
+
 		getInText.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -50,16 +53,17 @@ public class LoginActivity extends AppCompatActivity {
 				validateDataFromDB();
 			}
 		});
-		snapdealImageView.animate().translationYBy(-500).setDuration(2000)
-				.setStartDelay(2000).start();
+		snapdealImageView.animate().translationYBy(-400).setDuration(2000)
+				.setStartDelay(1000).start();
 		mainLinearLayout.animate().alpha(1).setDuration(4000)
-				.setStartDelay(2000).start();
+				.setStartDelay(1000).start();
 	}
 
 	public void validateDataFromDB() {
+		showProgressbar();
 		if (TextUtils.isEmpty(empCodeET.getText().toString().trim())) {
-			Toast.makeText(LoginActivity.this, "Oops!! You missed something!!",
-					Toast.LENGTH_LONG).show();
+
+			showToastMessage("Oops!! You missed something!!");
 		} else {
 			if (CommonUtils.isConnectingToInternet(getApplicationContext())) {
 				ParseQuery<ParseObject> query = ParseQuery
@@ -71,14 +75,9 @@ public class LoginActivity extends AppCompatActivity {
 					public void
 							done(List<ParseObject> objects, ParseException e) {
 						Log.d("Parser", "inside done");
-
 						if (e == null && objects != null && objects.size() > 0) {
-							Toast.makeText(
-									LoginActivity.this,
-									"Welcome To Snapdeal "
-											+ objects.get(0).getString(
-													"EmpName"),
-									Toast.LENGTH_LONG).show();
+							showToastMessage("Welcome To Snapdeal "
+									+ objects.get(0).getString("EmpName"));
 							SDEmployee employee = new SDEmployee();
 							employee.setEmpCode(objects.get(0).getString(
 									"EmpCode"));
@@ -100,17 +99,31 @@ public class LoginActivity extends AppCompatActivity {
 									DashboardActivity.class));
 							finish();
 						} else {
-							Toast.makeText(LoginActivity.this,
-									"Oops!! I don't know you!! Sorry!!",
-									Toast.LENGTH_LONG).show();
+							showToastMessage("Oops!! I don't know you!! Sorry!!");
 						}
 					}
 				});
 			} else {
-				Toast.makeText(LoginActivity.this,
-						"Looks like Internet is Off", Toast.LENGTH_LONG).show();
+				showToastMessage("Looks like Internet is Off");
 			}
 		}
+	}
+
+	private void showToastMessage(String message) {
+		Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
+		hideProgressbar();
+	}
+
+	private void showProgressbar() {
+		mProgressBar.setVisibility(View.VISIBLE);
+		getInText.setClickable(false);
+
+	}
+
+	private void hideProgressbar() {
+		mProgressBar.setVisibility(View.GONE);
+		getInText.setClickable(true);
+
 	}
 
 }
