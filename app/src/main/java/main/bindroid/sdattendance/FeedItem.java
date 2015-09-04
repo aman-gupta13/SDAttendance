@@ -10,6 +10,15 @@ public class FeedItem {
 	private String empMobile;
 	private String empDept;
 	private String empSeat;
+	private String empEmail;
+
+	public String getEmpEmail() {
+		return empEmail;
+	}
+
+	public void setEmpEmail(String empEmail) {
+		this.empEmail = empEmail;
+	}
 
 	public String getEmpId() {
 		return empId;

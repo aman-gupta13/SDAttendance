@@ -8,12 +8,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.TextAppearanceSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -39,13 +43,13 @@ public class FindSDianFragment extends Fragment
 	private BasicListAdapter adapter;
 	private EditText field;
 
-	private Button searchBy;
+	private TextView searchBy;
 
 	String searchByText;
 
 	private List<ParseObject> obj;
 	private View mProgressBar;
-	private Button find;
+	private TextView find;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -101,8 +105,8 @@ public class FindSDianFragment extends Fragment
 		field = (EditText) getView().findViewById(R.id.editText);
 		field.addTextChangedListener(this);
 		field.setClickable(false);
-		find = (Button) getView().findViewById(R.id.find);
-		searchBy = (Button) getView().findViewById(R.id.searchby);
+		find = (TextView) getView().findViewById(R.id.find);
+		searchBy = (TextView) getView().findViewById(R.id.searchby);
 
 		mProgressBar = (View) getView().findViewById(R.id.materialLoader);
 
@@ -212,7 +216,25 @@ public class FindSDianFragment extends Fragment
 	}
 
 	private void setSearchTitle() {
-		searchBy.setText("Search by " + searchByText);
+		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
+
+	}
+
+	private CharSequence getSortFilterTitle(String title, String words) {
+
+		SpannableString sb = new SpannableString(title);
+		sb.setSpan(
+				new TextAppearanceSpan(getActivity(), R.style.sort_filer_title),
+				0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+		String displayName = words.toUpperCase();
+		SpannableString filterWord = new SpannableString(displayName);
+		filterWord.setSpan(
+				new TextAppearanceSpan(getActivity(),
+						R.style.selected_sort_filter),
+				0, displayName.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+
+		return TextUtils.concat(sb, filterWord);
 	}
 
 	public void beforeTextChanged(CharSequence charSequence, int i, int i1,
@@ -251,7 +273,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpId(userObject.getString("EmpCode"));
 				item.setEmpMobile("+911244330082");
 				item.setEmpDept(userObject.getString("EmpDepartment"));
-
+				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				list.add(item);
 				adapter.notifyDataSetChanged();
@@ -269,7 +291,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
 				item.setEmpDept(userObject.getString("EmpDepartment"));
-
+				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
 				list.add(item);
@@ -289,7 +311,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
 				item.setEmpDept(userObject.getString("EmpDepartment"));
-
+				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
 				list.add(item);
