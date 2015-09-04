@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/mainView"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="16dp"
+<LinearLayout
+    android:id="@+id/mainView"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
 
-              android:paddingLeft="10dp"
-              android:paddingRight="10dp"
-              android:paddingTop="10dp"
+
     >
 
     <android.support.v7.widget.CardView
