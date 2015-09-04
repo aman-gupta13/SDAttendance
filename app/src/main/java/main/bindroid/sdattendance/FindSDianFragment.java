@@ -174,13 +174,11 @@ public class FindSDianFragment extends Fragment
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
 
 					findByName(obj, field.getText().toString());
-				else
-					if (searchByText
-							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				else if (searchByText
+						.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					findById(obj, field.getText().toString());
-				else
-						if (searchByText
-								.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+				else if (searchByText
+						.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
 					findByDept(obj, field.getText().toString());
 				break;
 
@@ -209,8 +207,8 @@ public class FindSDianFragment extends Fragment
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
 
-			searchByText = data.getExtras()
-					.getString(SearchByFragment.SEARCH_BY_KEY);
+			searchByText = data.getExtras().getString(
+					SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
 
@@ -228,22 +226,22 @@ public class FindSDianFragment extends Fragment
 		}
 
 		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
+		field.requestFocus();
 
 	}
 
 	private CharSequence getSortFilterTitle(String title, String words) {
 
 		SpannableString sb = new SpannableString(title);
-		sb.setSpan(
-				new TextAppearanceSpan(getActivity(), R.style.sort_filer_title),
-				0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		sb.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.sort_filer_title), 0, title.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		String displayName = words.toUpperCase();
 		SpannableString filterWord = new SpannableString(displayName);
-		filterWord.setSpan(
-				new TextAppearanceSpan(getActivity(),
-						R.style.selected_sort_filter),
-				0, displayName.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		filterWord.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.selected_sort_filter), 0, displayName.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		return TextUtils.concat(sb, filterWord);
 	}
@@ -254,8 +252,7 @@ public class FindSDianFragment extends Fragment
 	}
 
 	@Override
-	public void onTextChanged(CharSequence charSequence, int i, int i1,
-			int i2) {
+	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
 	}
 
@@ -287,6 +284,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpDept(userObject.getString("EmpDepartment"));
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -306,6 +304,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -318,7 +317,7 @@ public class FindSDianFragment extends Fragment
 		for (int i = 0; i < objects.size(); i++) {
 			ParseObject userObject = objects.get(i);
 			String dept = userObject.getString("EmpDepartment");
-			if (dept.equalsIgnoreCase(str)) {
+			if (dept.toLowerCase().contains(str.toLowerCase())) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
@@ -326,6 +325,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}

@@ -47,8 +47,8 @@ public class DashboardActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_dahsboard);
 
 		// doing beacon work here
-		mRegion = new Region(Globals.REGION + "_", Globals.PROXIMITY_UUID, Globals.MAJOR,
-				Globals.MINOR);
+		mRegion = new Region(Globals.REGION + "_", Globals.PROXIMITY_UUID,
+				Globals.MAJOR, Globals.MINOR);
 		// Configure mBeaconManager.
 		mBeaconManager = new BeaconManager(this);
 		// Default values are 5s of scanning and 25s of waiting time to save CPU
@@ -56,19 +56,21 @@ public class DashboardActivity extends AppCompatActivity {
 		// In order for this demo to be more responsive and immediate we lower
 		// down those values.
 		mBeaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
-		mBeaconManager.setMonitoringListener(new BeaconManager.MonitoringListener() {
+		mBeaconManager
+				.setMonitoringListener(new BeaconManager.MonitoringListener() {
 
-			@Override
-			public void onEnteredRegion(final Region region, List<Beacon> beacons) {
-				// Todo: do something when region entered
-			}
+					@Override
+					public void onEnteredRegion(final Region region,
+							List<Beacon> beacons) {
+						// Todo: do something when region entered
+					}
 
-			@Override
-			public void onExitedRegion(final Region region) {
-				// Todo: do something when region exited
-			}
+					@Override
+					public void onExitedRegion(final Region region) {
+						// Todo: do something when region exited
+					}
 
-		});
+				});
 		// starting beacon service here if bluetooth is on and never started
 		if (!getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
 				.getBoolean("service", false)) {
@@ -78,7 +80,8 @@ public class DashboardActivity extends AppCompatActivity {
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
-		nameTextView.setText(CommonUtils.getLoggedInUser(getApplicationContext()).getEmpName());
+		nameTextView.setText(CommonUtils.getLoggedInUser(
+				getApplicationContext()).getEmpName());
 		tab1 = tabLayout.newTab();
 		tab2 = tabLayout.newTab();
 		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -87,27 +90,13 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
-
-		int[][] states = new int[][]{new int[]{android.R.attr.state_checked}, // enabled
-				new int[]{android.R.attr.state_enabled}, // enabled
-				new int[]{-android.R.attr.state_enabled}, // disabled
-				new int[]{-android.R.attr.state_checked}, // unchecked
-				new int[]{android.R.attr.state_pressed}  // pressed
-		};
-
-		int[] colors = new int[]{Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE, Color.WHITE
-
-		};
-
-		ColorStateList myList = new ColorStateList(states, colors);
-		//tabLayout.setTabTextColors(Color.WHITE,Color.WHITE);//.setTabTextColors(myList);
-
+		tabLayout
+				.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(
+						viewPager));
 	}
 
-
 	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {
+
 		@Override
 		public void onTabChanged(String tabId) {
 
@@ -119,7 +108,8 @@ public class DashboardActivity extends AppCompatActivity {
 		super.onStart();
 		// Check if device supports Bluetooth Low Energy.
 		if (!mBeaconManager.hasBluetooth()) {
-			Toast.makeText(this, getString(R.string.device_no_ble), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.device_no_ble),
+					Toast.LENGTH_LONG).show();
 		}
 	}
 
@@ -134,7 +124,8 @@ public class DashboardActivity extends AppCompatActivity {
 					try {
 						mBeaconManager.startMonitoring(mRegion);
 					} catch (RemoteException e) {
-						Log.d("DashboardActivity", "Error while starting monitoring");
+						Log.d("DashboardActivity",
+								"Error while starting monitoring");
 					}
 				}
 			});
@@ -148,13 +139,14 @@ public class DashboardActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void
+			onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {
 			if (resultCode == Activity.RESULT_OK) {
 				startBeaconService();
 			} else {
-				Toast.makeText(this, getString(R.string.bluetooth_not_enabled), Toast.LENGTH_LONG)
-						.show();
+				Toast.makeText(this, getString(R.string.bluetooth_not_enabled),
+						Toast.LENGTH_LONG).show();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
@@ -163,12 +155,14 @@ public class DashboardActivity extends AppCompatActivity {
 	private boolean checkBluetooth() {
 		// Check if device supports Bluetooth Low Energy.
 		if (!mBeaconManager.hasBluetooth()) {
-			Toast.makeText(this, getString(R.string.device_no_ble), Toast.LENGTH_LONG).show();
+			Toast.makeText(this, getString(R.string.device_no_ble),
+					Toast.LENGTH_LONG).show();
 			return false;
 		}
 		// If Bluetooth is not enabled, let user enable it.
 		if (!mBeaconManager.isBluetoothEnabled()) {
-			Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			Intent enableBtIntent = new Intent(
+					BluetoothAdapter.ACTION_REQUEST_ENABLE);
 			startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
 		} else {
 			return true;
@@ -181,21 +175,23 @@ public class DashboardActivity extends AppCompatActivity {
 			startService(new Intent(DashboardActivity.this, MyService.class));
 			getSharedPreferences("SDAttendance", Context.MODE_PRIVATE).edit()
 					.putBoolean("service", true).commit();
-			Toast.makeText(DashboardActivity.this, getString(R.string.service_started),
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(DashboardActivity.this,
+					getString(R.string.service_started), Toast.LENGTH_SHORT)
+					.show();
 		}
 	}
 
 	private void stopBeaconService() {
 		stopService(new Intent(DashboardActivity.this, MyService.class));
-		Toast.makeText(DashboardActivity.this, getString(R.string.service_stopped),
-				Toast.LENGTH_SHORT).show();
+		Toast.makeText(DashboardActivity.this,
+				getString(R.string.service_stopped), Toast.LENGTH_SHORT).show();
 	}
 
 	OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
 
 		@Override
-		public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		public void onPageScrolled(int position, float positionOffset,
+				int positionOffsetPixels) {
 
 		}
 
@@ -203,7 +199,7 @@ public class DashboardActivity extends AppCompatActivity {
 		public void onPageSelected(int position) {
 			viewPager.setCurrentItem(position, true);
 			switch (position) {
-				case 0:
+				case 0 :
 					// tabLayout...setTabMode(0);
 			}
 		}
@@ -223,9 +219,9 @@ public class DashboardActivity extends AppCompatActivity {
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
-				case 0:
+				case 0 :
 					return new AttendenceFragment();
-				case 1:
+				case 1 :
 					return new FindSDianFragment();
 
 			}
@@ -236,9 +232,9 @@ public class DashboardActivity extends AppCompatActivity {
 		public CharSequence getPageTitle(int position) {
 
 			switch (position) {
-				case 0:
+				case 0 :
 					return "Attendence";
-				case 1:
+				case 1 :
 					return "Find SDian";
 
 			}

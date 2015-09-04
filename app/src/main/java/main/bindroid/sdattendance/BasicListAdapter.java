@@ -5,6 +5,8 @@ package main.bindroid.sdattendance;
  */
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +29,8 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
 	@Override
 	public CustomViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-		View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.card_view, null);
+		View view = LayoutInflater.from(viewGroup.getContext()).inflate(
+				R.layout.card_view, null);
 
 		CustomViewHolder viewHolder = new CustomViewHolder(view);
 		return viewHolder;
@@ -35,13 +38,25 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 
 	@Override
 	public void onBindViewHolder(final CustomViewHolder holder, int position) {
-		FeedItem feedItem = feedItemList.get(position);
+		final FeedItem feedItem = feedItemList.get(position);
 		if (feedItem != null) {
 			holder.mobile.setText(feedItem.getEmpMobile());
+			holder.mobile.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View view) {
+					Intent intent = new Intent(Intent.ACTION_CALL);
+
+					intent.setData(Uri.parse("tel:" + feedItem.getEmpMobile()));
+					mContext.startActivity(intent);
+				}
+			});
 			holder.dept.setText(feedItem.getEmpDept());
 			holder.name.setText(feedItem.getEmpName());
 			holder.seat.setText(feedItem.getEmpSeat());
+			holder.ext.setText(feedItem.getExt());
 			holder.itemView.setOnClickListener(new OnClickListener() {
+
 				@Override
 				public void onClick(View v) {
 					v.setTag(holder.seat.getText().toString());
@@ -49,7 +64,6 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 				}
 			});
 			holder.email.setText(feedItem.getEmpEmail());
-
 
 		}
 

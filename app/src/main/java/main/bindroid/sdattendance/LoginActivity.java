@@ -1,9 +1,11 @@
 package main.bindroid.sdattendance;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -60,7 +62,19 @@ public class LoginActivity extends AppCompatActivity
 	}
 
 	private void showStartUpAnimation() {
-		snapdealImageView.animate().translationYBy(-400).setDuration(2000)
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		int height=dm.heightPixels;
+		int heightAnimation = 0;
+		if(height <900) {
+			heightAnimation = -200;
+		} else if(height >=900 && height <1500) {
+			heightAnimation = -300;
+		} else if(height >=1500) {
+			heightAnimation = -400;
+		}
+
+		snapdealImageView.animate().translationYBy(heightAnimation).setDuration(2000)
 				.setStartDelay(1000).start();
 		mainLinearLayout.animate().alpha(1).setDuration(4000)
 				.setStartDelay(1000).start();
