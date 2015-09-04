@@ -113,6 +113,7 @@ public class FindSDianFragment extends Fragment
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		adapter.setOnClickListener(this);
 		mRecyclerView.setAdapter(adapter);
 		find.setOnClickListener(this);
 		searchBy.setOnClickListener(this);
@@ -173,11 +174,13 @@ public class FindSDianFragment extends Fragment
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
 
 					findByName(obj, field.getText().toString());
-				else if (searchByText
-						.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				else
+					if (searchByText
+							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					findById(obj, field.getText().toString());
-				else if (searchByText
-						.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+				else
+						if (searchByText
+								.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
 					findByDept(obj, field.getText().toString());
 				break;
 
@@ -190,6 +193,13 @@ public class FindSDianFragment extends Fragment
 				searchByFragment.setArguments(bundle);
 				searchByFragment.setTargetFragment(this, REQUEST_ID);
 				searchByFragment.show(fragmentManager, "searchBy");
+				break;
+			case R.id.mainView :
+
+				Intent intent = new Intent(getActivity(), FloorActivity.class);
+				intent.putExtra("SeatNumber", view.getTag().toString());
+				startActivity(intent);
+				break;
 
 		}
 	}
@@ -199,8 +209,8 @@ public class FindSDianFragment extends Fragment
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
 
-			searchByText = data.getExtras().getString(
-					SearchByFragment.SEARCH_BY_KEY);
+			searchByText = data.getExtras()
+					.getString(SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
 			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
@@ -223,16 +233,15 @@ public class FindSDianFragment extends Fragment
 	private CharSequence getSortFilterTitle(String title, String words) {
 
 		SpannableString sb = new SpannableString(title);
-		sb.setSpan(
-				new TextAppearanceSpan(getActivity(), R.style.sort_filer_title),
-				0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		sb.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.sort_filer_title), 0, title.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		String displayName = words.toUpperCase();
 		SpannableString filterWord = new SpannableString(displayName);
-		filterWord.setSpan(
-				new TextAppearanceSpan(getActivity(),
-						R.style.selected_sort_filter),
-				0, displayName.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		filterWord.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.selected_sort_filter), 0, displayName.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		return TextUtils.concat(sb, filterWord);
 	}
@@ -243,7 +252,8 @@ public class FindSDianFragment extends Fragment
 	}
 
 	@Override
-	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+	public void onTextChanged(CharSequence charSequence, int i, int i1,
+			int i2) {
 
 	}
 
@@ -286,7 +296,7 @@ public class FindSDianFragment extends Fragment
 		for (int i = 0; i < objects.size(); i++) {
 			ParseObject userObject = objects.get(i);
 			String code = userObject.getString("EmpCode");
-			if (code.equalsIgnoreCase(str)) {
+			if (code.startsWith(str)) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
