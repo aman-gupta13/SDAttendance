@@ -23,7 +23,10 @@ public class LocationMap {
 		if (seatNumber != null && seatNumber.trim().length() > 0) {
 			int seat = Integer.valueOf(seatNumber.substring(2)).intValue();
 			Location loc = LocationMap.getInstance().map.get(seat);
-			int start = 181 - seat;
+
+			if (seat > 3181) {
+				seat = seat - 3181;
+			}
 			if (loc == null) {
 				for (int i = seat; i < 3181; i++) {
 					loc = LocationMap.getInstance().map.get(i);
