@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
@@ -20,12 +18,8 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import main.bindroid.sdattendance.utills.CommonUtils;
 
@@ -55,22 +49,22 @@ public class DashboardActivity extends AppCompatActivity {
 		// cycles.
 		// In order for this demo to be more responsive and immediate we lower
 		// down those values.
-		mBeaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
-		mBeaconManager
-				.setMonitoringListener(new BeaconManager.MonitoringListener() {
-
-					@Override
-					public void onEnteredRegion(final Region region,
-							List<Beacon> beacons) {
-						// Todo: do something when region entered
-					}
-
-					@Override
-					public void onExitedRegion(final Region region) {
-						// Todo: do something when region exited
-					}
-
-				});
+//		mBeaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
+//		mBeaconManager
+//				.setMonitoringListener(new BeaconManager.MonitoringListener() {
+//
+//					@Override
+//					public void onEnteredRegion(final Region region,
+//							List<Beacon> beacons) {
+//						// Todo: do something when region entered
+//					}
+//
+//					@Override
+//					public void onExitedRegion(final Region region) {
+//						// Todo: do something when region exited
+//					}
+//
+//				});
 		// starting beacon service here if bluetooth is on and never started
 		if (!getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
 				.getBoolean("service", false)) {
