@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,7 +72,9 @@ public class AttendenceFragment extends Fragment {
 		super.onViewCreated(view, savedInstanceState);
 		recyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerviewAttendence);
-		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		LayoutManager layoutManager = new LinearLayoutManager(getActivity());
+		recyclerView.setLayoutManager(layoutManager);
+
 		list = new ArrayList<AttendenceRowItem>();
 		adapter = new AttendenceListAdapter(getActivity(), list);
 		recyclerView.setAdapter(adapter);
@@ -100,8 +103,9 @@ public class AttendenceFragment extends Fragment {
 				attendenceTogleStateListener.onTogleStateChange(b);
 			}
 		});
-		if (getActivity().getSharedPreferences("SDAttendance",
-				Context.MODE_PRIVATE).getBoolean("service", false)) {
+		if (getActivity()
+				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
+				.getBoolean("service", false)) {
 			toggle.setChecked(true);
 		}
 		return view;

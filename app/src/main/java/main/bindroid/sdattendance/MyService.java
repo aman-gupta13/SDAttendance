@@ -8,6 +8,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
@@ -16,7 +17,13 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.parse.FindCallback;
+import com.parse.ParseACL;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
+import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +41,9 @@ public class MyService extends Service {
 	private NotificationManager mNotificationManager;
 	private Region mRegion;
 	private SharedPreferences mPreferences;
+	private String loginId;
+
+	private SharedPreferences pref;
 
 	public MyService() {
 	}
@@ -42,6 +52,9 @@ public class MyService extends Service {
 	public void onCreate() {
 		// Configure verbose debug logging, enable this to debugging
 		// L.enableDebugLogging(true);
+		pref = getApplicationContext().getSharedPreferences("keyData",
+				Context.MODE_PRIVATE);
+		loginId = pref.getString("key", "");
 
 		mRegion = new Region(Globals.REGION, Globals.PROXIMITY_UUID,
 				Globals.MAJOR, Globals.MINOR);
@@ -69,14 +82,88 @@ public class MyService extends Service {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						postNotification(getString(R.string.status_entered_region));
-						ParseObject loginData = new ParseObject("SDLoginData");
-						loginData.put(
-								"EmpCode",
-								CommonUtils.getLoggedInUser(
-										getApplicationContext()).getEmpCode());
-						loginData.put("LoginDate",
-								CommonUtils.getDate(System.currentTimeMillis()));
-						loginData.saveInBackground();
+						loginId = pref.getString("key", "");
+						if (loginId.equalsIgnoreCase("") || loginId == null
+								|| loginId.equalsIgnoreCase("null")) {
+							final ParseObject loginData = new ParseObject(
+									"SDLoginData");
+							ParseACL acl = new ParseACL(ParseUser
+									.getCurrentUser());
+							acl.getPublicReadAccess();
+							acl.getPublicWriteAccess();
+							loginData.setACL(acl);
+							loginData.put("EmpCode", CommonUtils
+									.getLoggedInUser(getApplicationContext())
+									.getEmpCode());
+							loginData.put("LoginDate", CommonUtils
+									.getDate(System.currentTimeMillis()));
+							loginData.put("LoginTime",
+									CommonUtils.getCurrentTime());
+							loginData.put("LogoutTime", "00:00");
+							loginData.put("WorkHours", "00:00");
+							loginData.saveInBackground(new SaveCallback() {
+
+								public void done(ParseException e) {
+									if (e == null) {
+										// Saved successfully.
+										Editor edit = pref.edit();
+										String objId = loginData.getObjectId();
+										edit.putString("key", objId);
+										edit.commit();
+									} else {
+										// The save failed.
+										Log.d(TAG, "Error updating user data: "
+												+ e);
+									}
+								}
+							});
+
+						} else {
+							ParseQuery<ParseObject> parseQuery = ParseQuery
+									.getQuery("SDLoginData");
+							parseQuery.whereEqualTo("objectId", loginId);
+							parseQuery
+									.findInBackground(new FindCallback<ParseObject>() {
+
+										@Override
+										public void done(
+												List<ParseObject> objects,
+												ParseException e) {
+											if (e == null && objects != null
+													&& objects.size() > 0) {
+												objects.get(0)
+														.put("LogoutTime",
+																CommonUtils
+																		.getCurrentTime());
+												objects.get(0)
+														.put("WorkHours",
+																CommonUtils
+																		.getMinTime(
+																				CommonUtils
+																						.getCurrentTime(),
+																				objects.get(
+																						0)
+																						.getString(
+																								"LoginTime")));
+												objects.get(0)
+														.saveInBackground();
+												int dayCreated = objects.get(0)
+														.getCreatedAt()
+														.getDay();
+												int dayUpdated = objects.get(0)
+														.getUpdatedAt()
+														.getDay();
+												if (dayCreated - dayUpdated != 0) {
+													Editor edit = pref.edit();
+													edit.putString("key", "");
+													edit.commit();
+												}
+											}
+										}
+									});
+
+						}
+
 					}
 
 					@Override

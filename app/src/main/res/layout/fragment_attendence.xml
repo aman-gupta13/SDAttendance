@@ -14,11 +14,12 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:textStyle="bold"
             android:text="Automatic Attendance Update"
-            android:textSize="16dp"/>
+            android:textSize="16dp"
+            android:textStyle="bold"/>
 
-        <android.widget.Switch android:id="@+id/autoToggle"
+        <android.widget.Switch
+            android:id="@+id/autoToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -36,8 +37,7 @@
         android:id="@+id/recyclerviewAttendence"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"/>
+        />
 
 
 </LinearLayout>

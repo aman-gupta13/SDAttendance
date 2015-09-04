@@ -11,68 +11,66 @@
         android:id="@+id/cv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
 
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            >
+
 
             <TextView
                 android:id="@+id/loginDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:text="rockers"
                 android:textColor="#000000"
                 android:textSize="17sp"
-                android:textStyle="bold"
                 />
 
             <TextView
-                android:id="@+id/logintime"
+                android:id="@+id/person_department"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="rockers"
-                android:textColor="#000000"
-                android:textSize="17sp"
+                android:layout_below="@+id/loginDate"
+                android:layout_toRightOf="@+id/person_photo"
+                android:text="login time"
+                android:textSize="13sp"
                 />
 
             <TextView
                 android:id="@+id/logoutTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/loginDate"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="rockers"
-                android:textColor="#000000"
-                android:textSize="17sp"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/person_name"
+                android:layout_toRightOf="@+id/person_department"
+                android:gravity="right"
+                android:text="xxx@snapdeal.com"
+                android:textSize="13sp"
                 />
+
 
             <TextView
                 android:id="@+id/noOfHours"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_below="@+id/logintime"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="rockers"
-                android:textColor="#000000"
-                android:textSize="17sp"
+                android:layout_below="@+id/logoutTime"
+                android:text="afasd"
+                android:textSize="13sp"
                 />
 
+
         </RelativeLayout>
+
     </android.support.v7.widget.CardView>
+
 
 </LinearLayout>
