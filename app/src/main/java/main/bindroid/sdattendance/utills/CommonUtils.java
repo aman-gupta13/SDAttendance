@@ -49,17 +49,17 @@ public class CommonUtils {
 	}
 
 	public static void setLoggedInUser(Context context, SDEmployee employee) {
-		SharedPreferences sharedPreferences = context
-				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				"SDAttendance", Context.MODE_PRIVATE);
 		Editor editor = sharedPreferences.edit();
-		editor.putString("LoggedInUser",
-				changeEmployeeToJson(employee).toString());
+		editor.putString("LoggedInUser", changeEmployeeToJson(employee)
+				.toString());
 		editor.commit();
 	}
 
 	public static SDEmployee getLoggedInUser(Context context) {
-		SharedPreferences sharedPreferences = context
-				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				"SDAttendance", Context.MODE_PRIVATE);
 		if (sharedPreferences.getString("LoggedInUser", null) != null) {
 			try {
 				return changeJsonToEmployee(new JSONObject(
@@ -117,6 +117,16 @@ public class CommonUtils {
 		return myFormatted_time;
 	}
 
+	public static String getCurrentTime24Hours() {
+		final Calendar c = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("h:mm", Locale.US);
+		format.setTimeZone(c.getTimeZone());
+
+		String myFormatted_time = format.format(c.getTime());
+
+		return myFormatted_time;
+	}
+
 	public static String getMinTime(String lastTime, String startTime) {
 		String time = "";
 		try {
@@ -130,10 +140,9 @@ public class CommonUtils {
 				difference = date1.getTime() - date2.getTime();
 			}
 			int days = (int) (difference / (1000 * 60 * 60 * 24));
-			int hours = (int) ((difference - (1000 * 60 * 60 * 24 * days))
-					/ (1000 * 60 * 60));
-			int min = (int) (difference - (1000 * 60 * 60 * 24 * days)
-					- (1000 * 60 * 60 * hours)) / (1000 * 60);
+			int hours = (int) ((difference - (1000 * 60 * 60 * 24 * days)) / (1000 * 60 * 60));
+			int min = (int) (difference - (1000 * 60 * 60 * 24 * days) - (1000 * 60 * 60 * hours))
+					/ (1000 * 60);
 			hours = (hours < 0 ? -hours : hours);
 			Log.e("log_tag", "Hours: " + hours + ", Mins: " + min);
 			time = hours + ":" + min;
@@ -148,8 +157,8 @@ public class CommonUtils {
 
 			return "";
 		Date date = new Date(milisecond);
-		String stringMonth = (String) android.text.format.DateFormat
-				.format("MMM", date);
+		String stringMonth = (String) android.text.format.DateFormat.format(
+				"MMM", date);
 		String year = (String) android.text.format.DateFormat.format("yyyy",
 				date);
 		String day = (String) android.text.format.DateFormat.format("dd", date);

@@ -18,7 +18,7 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
-import com.parse.GetCallback;
+import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
@@ -42,6 +42,7 @@ public class MyService extends Service {
 	private String loginId;
 
 	private SharedPreferences pref;
+
 	public MyService() {
 	}
 
@@ -49,9 +50,9 @@ public class MyService extends Service {
 	public void onCreate() {
 		// Configure verbose debug logging, enable this to debugging
 		// L.enableDebugLogging(true);
-		pref = PreferenceManager.getDefaultSharedPreferences(
-				getApplicationContext());
-		loginId = pref.getString("key","");
+		pref = PreferenceManager
+				.getDefaultSharedPreferences(getApplicationContext());
+		loginId = pref.getString("key", "");
 
 		mRegion = new Region(Globals.REGION, Globals.PROXIMITY_UUID,
 				Globals.MAJOR, Globals.MINOR);
@@ -79,34 +80,57 @@ public class MyService extends Service {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						postNotification(getString(R.string.status_entered_region));
-						if(loginId.equalsIgnoreCase("") || loginId == null || loginId.equalsIgnoreCase("null"))
-						{
-							ParseObject loginData = new ParseObject("SDLoginData");
-							loginData.put(
-									"EmpCode",
-									CommonUtils.getLoggedInUser(getApplicationContext()).getEmpCode());
-							loginData.put("LoginDate",
-									CommonUtils.getDate(System.currentTimeMillis()));
+						if (loginId.equalsIgnoreCase("") || loginId == null
+								|| loginId.equalsIgnoreCase("null")) {
+							ParseObject loginData = new ParseObject(
+									"SDLoginData");
+							loginData.put("EmpCode", CommonUtils
+									.getLoggedInUser(getApplicationContext())
+									.getEmpCode());
+							loginData.put("LoginDate", CommonUtils
+									.getDate(System.currentTimeMillis()));
+							loginData.put("LoginTime",
+									CommonUtils.getCurrentTime());
+							loginData.put("LogoutTime", "00:00");
 							loginData.saveInBackground();
 							Editor edit = pref.edit();
-							edit.putString("key",loginData.getObjectId());
+							edit.putString("key", loginData.getObjectId());
+						} else {
+							ParseQuery<ParseObject> parseQuery = ParseQuery
+									.getQuery("SDLoginData");
+							parseQuery.whereEqualTo("objectId", loginId);
+							parseQuery
+									.findInBackground(new FindCallback<ParseObject>() {
+
+										@Override
+										public void done(
+												List<ParseObject> objects,
+												ParseException e) {
+											if (e == null && objects != null
+													&& objects.size() > 0) {
+												objects.get(0)
+														.put("LogoutTime",
+																CommonUtils
+																		.getTime(System
+																				.currentTimeMillis()));
+												objects.get(0)
+														.saveInBackground();
+												int dayCreated = objects.get(0)
+														.getCreatedAt()
+														.getDay();
+												int dayUpdated = objects.get(0)
+														.getUpdatedAt()
+														.getDay();
+												if (dayCreated - dayUpdated != 0) {
+													Editor edit = pref.edit();
+													edit.putString("key", "");
+													edit.commit();
+												}
+											}
+										}
+									});
+
 						}
-						else
-						{
-							ParseQuery query = ParseQuery.getQuery("SDLoginData");
-							query.getInBackground(loginId, new GetCallback() {
-								@Override
-								public void done(ParseObject object, ParseException e) {
-									object.put("LogoutTime", CommonUtils.getTime(System.currentTimeMillis()));
-									object.saveInBackground();
-								}
-
-
-							});
-
-
-						}
-
 
 					}
 
