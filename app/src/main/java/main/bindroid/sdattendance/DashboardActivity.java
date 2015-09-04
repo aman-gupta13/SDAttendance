@@ -31,8 +31,7 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		tab1 = tabLayout.newTab();
 		tab2 = tabLayout.newTab();
-		tab1.setText("Attendence");
-		tab2.setText("Find SDian");
+
 		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
 
 		tabLayout.addTab(tab1);
@@ -40,6 +39,8 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
+		tabLayout.setOnTabSelectedListener(
+				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
 	}
 
@@ -104,6 +105,20 @@ public class DashboardActivity extends AppCompatActivity {
 
 			}
 			return null;
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+
+			switch (position) {
+				case 0 :
+					return "Attendence";
+				case 1 :
+					return "Find SDian";
+
+			}
+
+			return super.getPageTitle(position);
 		}
 
 		@Override
