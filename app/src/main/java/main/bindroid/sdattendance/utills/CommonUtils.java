@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import main.bindroid.sdattendance.beans.SDEmployee;
@@ -102,8 +104,8 @@ public class CommonUtils {
 		}
 	}
 
-	public static String getDate(String milisecond) {
-		if (milisecond == null || milisecond.equals("null"))
+	public static String getDate(Long milisecond) {
+		if (milisecond == null || milisecond > 0)
 			return "";
 		Date date = new Date(milisecond);
 
@@ -116,5 +118,16 @@ public class CommonUtils {
 
 		return day + " " + stringMonth + " " + year;
 
+	}
+
+	public static String getTime(Long mili) {
+		if (mili == null || mili > 0)
+			return "";
+		Date date = new Date(mili);
+		// System.out.println("Date: " + date);
+
+		DateFormat df = new SimpleDateFormat("h:mm a");
+		String hour = df.format(date);
+		return hour;
 	}
 }
