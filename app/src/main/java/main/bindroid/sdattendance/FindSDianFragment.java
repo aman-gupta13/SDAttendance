@@ -251,7 +251,12 @@ public class FindSDianFragment extends Fragment
 			String name = userObject.getString("EmpName");
 			if (name.toLowerCase().contains(str.toLowerCase())) {
 				FeedItem item = new FeedItem();
-				item.setEmpName(name);
+				item.setEmpName(userObject.getString("EmpName"));
+				item.setEmpId(userObject.getString("EmpCode"));
+				item.setEmpMobile("+911244330082");
+				item.setEmpDept(userObject.getString("EmpDepartment"));
+
+				item.setEmpSeat(userObject.getString("EmpSeat"));
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -266,6 +271,11 @@ public class FindSDianFragment extends Fragment
 			if (code.equalsIgnoreCase(str)) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
+				item.setEmpId(userObject.getString("EmpCode"));
+				item.setEmpDept(userObject.getString("EmpDepartment"));
+
+				item.setEmpSeat(userObject.getString("EmpSeat"));
+				item.setEmpMobile("+911244330082");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}

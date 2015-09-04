@@ -10,14 +10,14 @@ import android.widget.TextView;
 public class CustomViewHolder extends RecyclerView.ViewHolder {
 
 	public TextView name;
-	public TextView email;
+	public TextView dept;
 	public TextView mobile;
 	public TextView seat;
 
 	public CustomViewHolder(View view) {
 		super(view);
 		name = (TextView) view.findViewById(R.id.person_name);
-		email = (TextView) view.findViewById(R.id.person_email);
+		dept = (TextView) view.findViewById(R.id.person_department);
 		mobile = (TextView) view.findViewById(R.id.person_mobile);
 		seat = (TextView) view.findViewById(R.id.person_seat);
 

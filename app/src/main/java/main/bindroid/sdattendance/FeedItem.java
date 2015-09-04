@@ -8,7 +8,7 @@ public class FeedItem {
 	private String empId;
 	private String empName;
 	private String empMobile;
-	private String empEmail;
+	private String empDept;
 	private String empSeat;
 
 	public String getEmpId() {
@@ -27,12 +27,12 @@ public class FeedItem {
 		this.empSeat = empSeat;
 	}
 
-	public String getEmpEmail() {
-		return empEmail;
+	public String getEmpDept() {
+		return empDept;
 	}
 
-	public void setEmpEmail(String empEmail) {
-		this.empEmail = empEmail;
+	public void setEmpDept(String empDept) {
+		this.empDept = empDept;
 	}
 
 	public String getEmpMobile() {
