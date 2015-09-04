@@ -11,22 +11,36 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.parse.ParseAnalytics;
+
 public class DashboardActivity extends AppCompatActivity {
 
 	private ViewPager viewPager;
 	private TabLayout tabLayout;
+	private TabLayout.Tab tab1;
+	private TabLayout.Tab tab2;
+	private MyPagerAdapter myAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dahsboard);
+		ParseAnalytics.trackAppOpenedInBackground(getIntent());
+
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
-		tabLayout.addTab(tabLayout.newTab().setText("Attendence"));
-		tabLayout.addTab(tabLayout.newTab().setText("Find SDian"));
+		tab1 = tabLayout.newTab();
+		tab2 = tabLayout.newTab();
+		tab1.setText("Attendence");
+		tab2.setText("Find SDian");
+		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
+
+		tabLayout.addTab(tab1);
+		tabLayout.addTab(tab2);
 		viewPager.setOnPageChangeListener(onPageChangeListener);
-		viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
+
 	}
 
 	OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
@@ -40,6 +54,10 @@ public class DashboardActivity extends AppCompatActivity {
 		@Override
 		public void onPageSelected(int position) {
 			viewPager.setCurrentItem(position, true);
+			switch (position) {
+				case 0 :
+					// tabLayout...setTabMode(0);
+			}
 		}
 
 		@Override
