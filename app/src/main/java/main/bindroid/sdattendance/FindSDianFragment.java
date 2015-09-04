@@ -2,17 +2,23 @@ package main.bindroid.sdattendance;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup.Input;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
+
+import android.text.InputType;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
@@ -45,6 +51,8 @@ public class FindSDianFragment extends Fragment
 	private EditText field;
 	private String search = "Name";
 	private Button searchBy;
+	private List<ParseObject> obj;
+	private View mProgressBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,7 @@ public class FindSDianFragment extends Fragment
 
 		list = new ArrayList<FeedItem>();
 		adapter = new BasicListAdapter(getActivity(), list);
+		obj = new ArrayList<>();
 
 	}
 
@@ -59,6 +68,7 @@ public class FindSDianFragment extends Fragment
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		initWidget();
+		parse();
 	}
 
 	/**
@@ -97,6 +107,7 @@ public class FindSDianFragment extends Fragment
 		field.setClickable(false);
 		Button find = (Button) getView().findViewById(R.id.find);
 		searchBy = (Button) getView().findViewById(R.id.searchby);
+		mProgressBar = (View) getView().findViewById(R.id.materialLoader);
 		searchBy.setText("Search by Name");
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
@@ -107,7 +118,7 @@ public class FindSDianFragment extends Fragment
 
 	}
 
-	private void parse(String fieldName, String value) {
+	private void parse() {
 		/*
 		 * final ParseObject testObject = new ParseObject("TestObject");
 		 * testObject.put("foo", "bar"); testObject.saveInBackground(new
@@ -124,27 +135,21 @@ public class FindSDianFragment extends Fragment
 		 *
 		 * });
 		 */
-
+		showProgressbar();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee");
-		if (fieldName.equalsIgnoreCase("EmpName")) {
-			//query.whereMatches(fieldName, value);
-		} else {
-			query.whereEqualTo(fieldName, value);
-		}
+		/*
+		 * if (fieldName.equalsIgnoreCase("EmpName")) { //
+		 * query.whereMatches(fieldName, value); } else {
+		 * query.whereEqualTo(fieldName, value); }
+		 */
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
 
 				if (e == null) {
-					for (int i = 0; i < objects.size(); i++) {
-						ParseObject userObject = objects.get(i);
-						FeedItem item = new FeedItem();
-						item.setEmpName(userObject.getString("EmpName"));
-						list.add(item);
-						adapter.notifyDataSetChanged();
-
-					}
+					FindSDianFragment.this.obj = objects;
+					hideProgressbar();
 					// Log.d("score", "Retrieved " + scoreList.size() +
 					// " scores");
 				} else {
@@ -162,15 +167,27 @@ public class FindSDianFragment extends Fragment
 			case R.id.find :
 				list.clear();
 				if (search.equalsIgnoreCase("Name"))
-					parse("EmpName", field.getText().toString());
+					findByName(obj, field.getText().toString());
 				else if (search.equalsIgnoreCase("Employee Id"))
-					parse("EmpCode", field.getText().toString());
+					findById(obj, field.getText().toString());
 				break;
 
 			case R.id.searchby :
 				final Dialog dia = new Dialog(getActivity());
 				dia.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dia.setContentView(R.layout.filter_dialog_layout);
+				RadioButton nameButton,
+				employeeIdButton;
+				nameButton = (RadioButton) dia.findViewById(R.id.radioName);
+				employeeIdButton = (RadioButton) dia.findViewById(R.id.radioId);
+				if (search != null && search.equalsIgnoreCase("name")) {
+					nameButton.setChecked(true);
+					employeeIdButton.setChecked(false);
+				} else if (search != null
+						&& search.equalsIgnoreCase("Employee Id")) {
+					nameButton.setChecked(false);
+					employeeIdButton.setChecked(true);
+				}
 				RadioGroup radioGroup = (RadioGroup) dia
 						.findViewById(R.id.radioCategory);
 
@@ -184,14 +201,17 @@ public class FindSDianFragment extends Fragment
 								switch (checkedId) {
 									case R.id.radioName :
 										search = "Name";
-
+										field.setInputType(InputType.TYPE_CLASS_TEXT);
 										break;
 									case R.id.radioId :
+
+										field.setInputType(InputType.TYPE_CLASS_NUMBER);
+
 										search = "Employee Id";
 										break;
 								}
 								searchBy.setText("Search by " + search);
-								// dia.cancel();
+								dia.cancel();
 							}
 						});
 				dia.show();
@@ -212,13 +232,55 @@ public class FindSDianFragment extends Fragment
 
 	@Override
 	public void afterTextChanged(Editable editable) {
+		if (field.getText().toString().length() >= 4) {
+			list.clear();
 
-		list.clear();
+			if (search.equalsIgnoreCase("Name"))
+				findByName(obj, field.getText().toString());
+			else if (search.equalsIgnoreCase("Employee Id"))
+				findById(obj, field.getText().toString());
+		}
 
-		if (search.equalsIgnoreCase("Name"))
-			parse("EmpName", field.getText().toString());
-		else if (search.equalsIgnoreCase("Employee Id"))
-			parse("EmpCode", field.getText().toString());
+	}
+
+	private void findByName(List<ParseObject> objects, String str) {
+		for (int i = 0; i < objects.size(); i++) {
+			ParseObject userObject = objects.get(i);
+			String name = userObject.getString("EmpName");
+			if (name.toLowerCase().contains(str.toLowerCase())) {
+				FeedItem item = new FeedItem();
+				item.setEmpName(name);
+				list.add(item);
+				adapter.notifyDataSetChanged();
+			}
+
+		}
+	}
+
+	private void findById(List<ParseObject> objects, String str) {
+		for (int i = 0; i < objects.size(); i++) {
+			ParseObject userObject = objects.get(i);
+			String code = userObject.getString("EmpCode");
+			if (code.equalsIgnoreCase(str)) {
+				FeedItem item = new FeedItem();
+				item.setEmpName(userObject.getString("EmpName"));
+				list.add(item);
+				adapter.notifyDataSetChanged();
+			}
+
+		}
+
+	}
+
+	private void showProgressbar() {
+		mProgressBar.setVisibility(View.VISIBLE);
+		// getInText.setClickable(false);
+
+	}
+
+	private void hideProgressbar() {
+		mProgressBar.setVisibility(View.GONE);
+		// getInText.setClickable(true);
 
 	}
 }
