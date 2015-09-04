@@ -102,10 +102,15 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 										 boolean isChecked) {
-				if (isChecked)
-					startBeaconService();
-				else
-					stopBeaconService();
+				try {
+//					if (isChecked)
+//						startBeaconService();
+//					else
+//						stopBeaconService();
+				}catch(Exception e)
+				{
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -148,7 +153,7 @@ public class MainActivity extends AppCompatActivity {
 	onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {
 			if (resultCode == Activity.RESULT_OK) {
-				startBeaconService();
+				//startBeaconService();
 				mSwitch.setChecked(true);
 			} else {
 				Toast.makeText(this, getString(R.string.bluetooth_not_enabled),
