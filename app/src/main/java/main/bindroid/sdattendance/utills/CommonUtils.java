@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -140,5 +141,30 @@ public class CommonUtils {
 			e.printStackTrace();
 		}
 		return time;
+	}
+
+	public static String getDate(Long milisecond) {
+		if (milisecond == null || milisecond > 0)
+
+			return "";
+		Date date = new Date(milisecond);
+		String stringMonth = (String) android.text.format.DateFormat
+				.format("MMM", date);
+		String year = (String) android.text.format.DateFormat.format("yyyy",
+				date);
+		String day = (String) android.text.format.DateFormat.format("dd", date);
+		return day + " " + stringMonth + " " + year;
+	}
+
+	public static String getTime(Long mili) {
+		if (mili == null || mili > 0)
+			return "";
+		Date date = new Date(mili);
+		// System.out.println("Date: " + date);
+
+		DateFormat df = new SimpleDateFormat("h:mm a");
+		String hour = df.format(date);
+		return hour;
+
 	}
 }
