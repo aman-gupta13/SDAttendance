@@ -53,6 +53,7 @@ public class FindSDianFragment extends Fragment
 	private Button searchBy;
 	private List<ParseObject> obj;
 	private View mProgressBar;
+	private Button find;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -105,7 +106,7 @@ public class FindSDianFragment extends Fragment
 		field = (EditText) getView().findViewById(R.id.editText);
 		field.addTextChangedListener(this);
 		field.setClickable(false);
-		Button find = (Button) getView().findViewById(R.id.find);
+		find = (Button) getView().findViewById(R.id.find);
 		searchBy = (Button) getView().findViewById(R.id.searchby);
 		mProgressBar = (View) getView().findViewById(R.id.materialLoader);
 		searchBy.setText("Search by Name");
@@ -166,6 +167,7 @@ public class FindSDianFragment extends Fragment
 		switch (view.getId()) {
 			case R.id.find :
 				list.clear();
+				adapter.notifyDataSetChanged();
 				if (search.equalsIgnoreCase("Name"))
 					findByName(obj, field.getText().toString());
 				else if (search.equalsIgnoreCase("Employee Id"))
@@ -234,7 +236,7 @@ public class FindSDianFragment extends Fragment
 	public void afterTextChanged(Editable editable) {
 		if (field.getText().toString().length() >= 4) {
 			list.clear();
-
+			adapter.notifyDataSetChanged();
 			if (search.equalsIgnoreCase("Name"))
 				findByName(obj, field.getText().toString());
 			else if (search.equalsIgnoreCase("Employee Id"))
@@ -275,12 +277,17 @@ public class FindSDianFragment extends Fragment
 	private void showProgressbar() {
 		mProgressBar.setVisibility(View.VISIBLE);
 		// getInText.setClickable(false);
+		field.setClickable(false);
+		searchBy.setClickable(false);
+		find.setClickable(false);
 
 	}
 
 	private void hideProgressbar() {
 		mProgressBar.setVisibility(View.GONE);
 		// getInText.setClickable(true);
-
+		field.setClickable(true);
+		searchBy.setClickable(true);
+		find.setClickable(true);
 	}
 }
