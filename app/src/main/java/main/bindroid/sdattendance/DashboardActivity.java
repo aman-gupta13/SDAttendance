@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
@@ -23,7 +24,7 @@ import com.estimote.sdk.Region;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.parse.ParseAnalytics;
+import main.bindroid.sdattendance.utills.CommonUtils;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -35,6 +36,7 @@ public class DashboardActivity extends AppCompatActivity {
 	private TabLayout.Tab tab1;
 	private TabLayout.Tab tab2;
 	private MyPagerAdapter myAdapter;
+	private TextView nameTextView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +74,9 @@ public class DashboardActivity extends AppCompatActivity {
 
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
+		nameTextView = (TextView) findViewById(R.id.nameTextView);
+		nameTextView.setText(CommonUtils
+				.getLoggedInUser(getApplicationContext()).getEmpName());
 		tab1 = tabLayout.newTab();
 		tab2 = tabLayout.newTab();
 		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -80,9 +85,8 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout
-				.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(
-						viewPager));
+		tabLayout.setOnTabSelectedListener(
+				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
 	}
 
@@ -121,8 +125,8 @@ public class DashboardActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void
-			onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {
 			if (resultCode == Activity.RESULT_OK) {
 				startBeaconService();
