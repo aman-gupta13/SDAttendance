@@ -42,9 +42,9 @@ public class AttendenceListAdapter
 		AttendenceRowItem feedItem = feedItemList.get(position);
 		if (feedItem != null) {
 			holder.loginDate.setText(feedItem.getDate());
-			holder.loginTime.setText(feedItem.getLoginTime());
-			holder.logoutTime.setText(feedItem.getLogoutTime());
-			holder.noOfHours.setText(feedItem.getNoOfHours());
+			holder.loginTime.setText("Login : " + feedItem.getLoginTime());
+			holder.logoutTime.setText("Logout : " + feedItem.getLogoutTime());
+			holder.noOfHours.setText("Hours : " + feedItem.getNoOfHours());
 
 		}
 
