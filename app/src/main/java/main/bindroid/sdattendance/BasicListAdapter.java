@@ -9,7 +9,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.List;
 
@@ -36,12 +35,10 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 	public void onBindViewHolder(CustomViewHolder holder, int position) {
 		FeedItem feedItem = feedItemList.get(position);
 		if (feedItem != null) {
-			// holder.mobile.setText(feedItem.getEmpMobile());
-			// holder.email.setText(feedItem.getEmpEmail());
-			TextView text = holder.name;
-			if (text != null)
-				text.setText(feedItem.getEmpName());
-			// holder.seat.setText(feedItem.getEmpSeat());
+			holder.mobile.setText(feedItem.getEmpMobile());
+			holder.dept.setText(feedItem.getEmpDept());
+			holder.name.setText(feedItem.getEmpName());
+			holder.seat.setText(feedItem.getEmpSeat());
 		}
 
 	}

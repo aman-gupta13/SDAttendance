@@ -8,7 +8,7 @@
     <android.support.v7.widget.CardView
         android:id="@+id/cv"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
 
         >
 
@@ -34,54 +34,69 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_toRightOf="@+id/person_photo"
+                android:singleLine="true"
                 android:text="rockers"
-
-                android:textSize="30sp"
                 android:textColor="#000000"
+                android:textSize="20sp"
                 />
 
             <TextView
-                android:id="@+id/person_email"
+                android:id="@+id/person_department"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/person_name"
                 android:layout_toRightOf="@+id/person_photo"
-                android:text="sadf@dsaf.com"
 
+                android:text="sadf@dsaf.com"
                 />
+
             <ImageView
                 android:id="@+id/phone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/phone"
-                android:layout_below="@+id/person_email"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_below="@+id/person_department"
                 android:layout_toRightOf="@+id/person_photo"
+                android:paddingTop="5dp"
+                android:src="@drawable/phone"
                 />
 
             <TextView
                 android:id="@+id/person_mobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/person_email"
+                android:layout_below="@+id/person_department"
                 android:layout_toRightOf="@+id/phone"
-                android:text="9911460130"
+                android:gravity="center_vertical"
+                android:padding="3dp"
+                android:text="+911244330082"
+
                 />
+
+            <View
+                android:layout_width="1dp"
+                android:layout_height="15dp"
+                android:layout_below="@+id/person_department"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="4dp"
+                android:layout_toRightOf="@+id/person_mobile"
+                android:background="@color/LightGray"></View>
+
             <ImageView
                 android:id="@+id/seat"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
-                android:src="@drawable/furniture"
+                android:layout_alignParentBottom="true"
                 android:layout_toLeftOf="@+id/person_seat"
 
-                android:layout_alignParentBottom="true"
+                android:src="@drawable/furniture"
                 />
 
             <TextView
                 android:id="@+id/person_seat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 android:text="afasd"
 
                 />
