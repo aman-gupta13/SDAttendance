@@ -1,12 +1,17 @@
 package main.bindroid.sdattendance;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +19,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.parse.FindCallback;
-import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
@@ -30,7 +31,8 @@ import java.util.List;
  */
 public class FindSDianFragment extends Fragment
 		implements
-			View.OnClickListener {
+			View.OnClickListener,
+			TextWatcher {
 
 	private RecyclerView mRecyclerView;
 	private List<FeedItem> list;
@@ -38,7 +40,12 @@ public class FindSDianFragment extends Fragment
 	private EditText field;
 
 	private Button searchBy;
+
 	String searchByText;
+
+	private List<ParseObject> obj;
+	private View mProgressBar;
+	private Button find;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,7 @@ public class FindSDianFragment extends Fragment
 
 		list = new ArrayList<FeedItem>();
 		adapter = new BasicListAdapter(getActivity(), list);
+		obj = new ArrayList<>();
 
 	}
 
@@ -54,6 +62,7 @@ public class FindSDianFragment extends Fragment
 		super.onViewCreated(view, savedInstanceState);
 		initWidget();
 
+		parse();
 	}
 
 	private int REQUEST_ID = 101;
@@ -90,9 +99,12 @@ public class FindSDianFragment extends Fragment
 
 	private void initWidget() {
 		field = (EditText) getView().findViewById(R.id.editText);
+		field.addTextChangedListener(this);
 		field.setClickable(false);
-		Button find = (Button) getView().findViewById(R.id.find);
+		find = (Button) getView().findViewById(R.id.find);
 		searchBy = (Button) getView().findViewById(R.id.searchby);
+
+		mProgressBar = (View) getView().findViewById(R.id.materialLoader);
 
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
@@ -104,7 +116,7 @@ public class FindSDianFragment extends Fragment
 		setSearchTitle();
 	}
 
-	private void parse(String fieldName, String value) {
+	private void parse() {
 		/*
 		 * final ParseObject testObject = new ParseObject("TestObject");
 		 * testObject.put("foo", "bar"); testObject.saveInBackground(new
@@ -121,40 +133,21 @@ public class FindSDianFragment extends Fragment
 		 *
 		 * });
 		 */
-
+		showProgressbar();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee");
-		query.whereEqualTo(fieldName, value);
+		/*
+		 * if (fieldName.equalsIgnoreCase("EmpName")) { //
+		 * query.whereMatches(fieldName, value); } else {
+		 * query.whereEqualTo(fieldName, value); }
+		 */
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
 
 				if (e == null) {
-					for (int i = 0; i < objects.size(); i++) {
-
-						ParseQuery<ParseObject> query = ParseQuery
-								.getQuery("SDEmployee");
-						query.getInBackground(objects.get(i).getObjectId(),
-								new GetCallback<ParseObject>() {
-
-							@Override
-							public void done(ParseObject arg0,
-									ParseException arg1) {
-								// TODO Auto-generated method stub
-
-								if (arg1 == null) {
-									FeedItem item = new FeedItem();
-									item.setEmpName(arg0.getString("EmpName"));
-									list.add(item);
-									adapter.notifyDataSetChanged();
-
-								} else {
-
-								}
-							}
-						});
-
-					}
+					FindSDianFragment.this.obj = objects;
+					hideProgressbar();
 					// Log.d("score", "Retrieved " + scoreList.size() +
 					// " scores");
 				} else {
@@ -170,12 +163,15 @@ public class FindSDianFragment extends Fragment
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.find :
+				list.clear();
+				adapter.notifyDataSetChanged();
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
-					parse("EmpName", field.getText().toString());
+
+					findByName(obj, field.getText().toString());
 				else
 					if (searchByText
 							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
-					parse("EmpCode", field.getText().toString());
+					findById(obj, field.getText().toString());
 				break;
 
 			case R.id.searchby :
@@ -188,7 +184,6 @@ public class FindSDianFragment extends Fragment
 				searchByFragment.setTargetFragment(this, REQUEST_ID);
 				searchByFragment.show(fragmentManager, "searchBy");
 
-				break;
 		}
 	}
 
@@ -199,6 +194,8 @@ public class FindSDianFragment extends Fragment
 
 			searchByText = data.getExtras()
 					.getString(SearchByFragment.SEARCH_BY_KEY);
+			list.clear();
+			adapter.notifyDataSetChanged();
 			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
 				field.getText().clear();
 				field.setInputType(InputType.TYPE_CLASS_NUMBER);
@@ -213,5 +210,76 @@ public class FindSDianFragment extends Fragment
 
 	private void setSearchTitle() {
 		searchBy.setText("Search by " + searchByText);
+	}
+
+	public void beforeTextChanged(CharSequence charSequence, int i, int i1,
+			int i2) {
+
+	}
+
+	@Override
+	public void onTextChanged(CharSequence charSequence, int i, int i1,
+			int i2) {
+
+	}
+
+	@Override
+	public void afterTextChanged(Editable editable) {
+		if (field.getText().toString().length() >= 4) {
+			list.clear();
+			adapter.notifyDataSetChanged();
+			if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
+				findByName(obj, field.getText().toString());
+			else if (searchByText.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				findById(obj, field.getText().toString());
+		}
+
+	}
+
+	private void findByName(List<ParseObject> objects, String str) {
+		for (int i = 0; i < objects.size(); i++) {
+			ParseObject userObject = objects.get(i);
+			String name = userObject.getString("EmpName");
+			if (name.toLowerCase().contains(str.toLowerCase())) {
+				FeedItem item = new FeedItem();
+				item.setEmpName(name);
+				list.add(item);
+				adapter.notifyDataSetChanged();
+			}
+
+		}
+	}
+
+	private void findById(List<ParseObject> objects, String str) {
+		for (int i = 0; i < objects.size(); i++) {
+			ParseObject userObject = objects.get(i);
+			String code = userObject.getString("EmpCode");
+			if (code.equalsIgnoreCase(str)) {
+				FeedItem item = new FeedItem();
+				item.setEmpName(userObject.getString("EmpName"));
+				list.add(item);
+				adapter.notifyDataSetChanged();
+			}
+
+		}
+
+	}
+
+	private void showProgressbar() {
+		mProgressBar.setVisibility(View.VISIBLE);
+		// getInText.setClickable(false);
+		field.setClickable(false);
+		searchBy.setClickable(false);
+		find.setClickable(false);
+
+	}
+
+	private void hideProgressbar() {
+		mProgressBar.setVisibility(View.GONE);
+		// getInText.setClickable(true);
+		field.setClickable(true);
+		searchBy.setClickable(true);
+		find.setClickable(true);
+
 	}
 }
