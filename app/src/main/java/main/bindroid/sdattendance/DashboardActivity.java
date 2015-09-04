@@ -82,7 +82,7 @@ public class DashboardActivity extends AppCompatActivity {
 				case 0 :
 					return new AttendenceFragment();
 				case 1 :
-					return new AttendenceFragment();
+					return new FindSDianFragment();
 
 			}
 			return null;
