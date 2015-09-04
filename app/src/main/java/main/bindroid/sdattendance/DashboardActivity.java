@@ -19,11 +19,12 @@ import android.widget.Toast;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.parse.ParseObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import com.parse.ParseAnalytics;
+import main.bindroid.sdattendance.utills.CommonUtils;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -58,12 +59,22 @@ public class DashboardActivity extends AppCompatActivity {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						// Todo: do something when region entered
+						if (CommonUtils
+								.isConnectingToInternet(getApplicationContext())) {
+							ParseObject loginData = new ParseObject(
+									"SDLoginData");
+							loginData.put("EmpCode", CommonUtils
+									.getLoggedInUser(getApplicationContext())
+									.getEmpCode());
+							loginData.saveInBackground();
+						}
 					}
 
 					@Override
 					public void onExitedRegion(final Region region) {
 						// Todo: do something when region exited
 					}
+
 				});
 		// starting beacon service here if bluetooth is on and never started
 		if (!getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
