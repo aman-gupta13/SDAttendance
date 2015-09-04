@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">SD Attendance</string>
+
+    <string name="action_start">start</string>
+    <string name="action_stop">stop</string>
+    <string name="action_settings">settings</string>
+    <string name="last_post_notification">Last posted notification:</string>
+    <string name="none">None</string>
+    <string name="status_entered_region">Entered into region</string>
+    <string name="status_exited_region">Exited from region</string>
+    <string name="waiting_notification">waiting notification</string>
+    <string name="device_no_ble">Device does not have Bluetooth Low Energy</string>
+    <string name="bluetooth_not_enabled">Bluetooth not enabled</string>
+    <string name="service_started">service started</string>
+    <string name="service_stopped">service stopped</string>
+    <string name="email">email</string>
+    <string name="password">password</string>
+    <string name="check_text">Check Me In and Out</string>
+    <string name="error_email">insert an email</string>
+    <string name="error_password">insert a password</string>
+</resources>
