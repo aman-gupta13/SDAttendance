@@ -1,0 +1,16 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item android:id="@android:id/progress">
+        <rotate
+            android:drawable="@drawable/material_loader"
+            />
+    </item>
+    <item
+        android:bottom="15dp"
+        android:drawable="@drawable/material_loading_sd_icon"
+        android:left="15dp"
+        android:right="15dp"
+        android:top="15dp"
+        >
+    </item>
+</layer-list>
