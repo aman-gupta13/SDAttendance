@@ -251,7 +251,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpId(userObject.getString("EmpCode"));
 				item.setEmpMobile("+911244330082");
 				item.setEmpDept(userObject.getString("EmpDepartment"));
-
+				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				list.add(item);
 				adapter.notifyDataSetChanged();
@@ -269,7 +269,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
 				item.setEmpDept(userObject.getString("EmpDepartment"));
-
+				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
 				list.add(item);
@@ -289,7 +289,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
 				item.setEmpDept(userObject.getString("EmpDepartment"));
-
+				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
 				list.add(item);
