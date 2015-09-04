@@ -23,7 +23,6 @@ import android.widget.Toast;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
-import com.parse.ParseObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -64,17 +63,6 @@ public class DashboardActivity extends AppCompatActivity {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						// Todo: do something when region entered
-						if (CommonUtils.isConnectingToInternet(
-								getApplicationContext())) {
-							ParseObject loginData = new ParseObject(
-									"SDLoginData");
-							loginData.put("EmpCode",
-									CommonUtils
-											.getLoggedInUser(
-													getApplicationContext())
-											.getEmpCode());
-							loginData.saveInBackground();
-						}
 					}
 
 					@Override
@@ -85,14 +73,15 @@ public class DashboardActivity extends AppCompatActivity {
 				});
 		// starting beacon service here if bluetooth is on and never started
 		if (!getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
-				.getBoolean("service", false))
+				.getBoolean("service", false)) {
 			startBeaconService();
+		}
 
 		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
 		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		nameTextView = (TextView) findViewById(R.id.nameTextView);
-		nameTextView.setText(CommonUtils
-				.getLoggedInUser(getApplicationContext()).getEmpName());
+		nameTextView.setText(CommonUtils.getLoggedInUser(
+				getApplicationContext()).getEmpName());
 		tab1 = tabLayout.newTab();
 		tab2 = tabLayout.newTab();
 		myAdapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -101,24 +90,9 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout.setOnTabSelectedListener(
-				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
-		int[][] states = new int[][]{new int[]{android.R.attr.state_checked}, // enabled
-				new int[]{android.R.attr.state_enabled}, // enabled
-				new int[]{-android.R.attr.state_enabled}, // disabled
-				new int[]{-android.R.attr.state_checked}, // unchecked
-				new int[]{android.R.attr.state_pressed} // pressed
-		};
-
-		int[] colors = new int[]{Color.WHITE, Color.WHITE, Color.WHITE,
-				Color.WHITE, Color.WHITE
-
-		};
-
-		ColorStateList myList = new ColorStateList(states, colors);
-		// tabLayout.setTabTextColors(Color.WHITE,Color.WHITE);//.setTabTextColors(myList);
-
+		tabLayout
+				.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(
+						viewPager));
 	}
 
 	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {
@@ -142,7 +116,7 @@ public class DashboardActivity extends AppCompatActivity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (mBeaconManager.hasBluetooth())
+		if (mBeaconManager.hasBluetooth()) {
 			mBeaconManager.connect(new BeaconManager.ServiceReadyCallback() {
 
 				@Override
@@ -155,6 +129,7 @@ public class DashboardActivity extends AppCompatActivity {
 					}
 				}
 			});
+		}
 	}
 
 	@Override
@@ -164,8 +139,8 @@ public class DashboardActivity extends AppCompatActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode,
-			Intent data) {
+	protected void
+			onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_ENABLE_BT) {
 			if (resultCode == Activity.RESULT_OK) {
 				startBeaconService();
