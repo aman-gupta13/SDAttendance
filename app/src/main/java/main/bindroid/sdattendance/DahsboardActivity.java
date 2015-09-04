@@ -1,22 +1,52 @@
 package main.bindroid.sdattendance;
 
-import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
 public class DahsboardActivity extends AppCompatActivity {
 
+	private ViewPager viewPager;
+	private TabLayout tabLayout;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_dahsboard);
-		TabLayout tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+		tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		tabLayout.addTab(tabLayout.newTab().setText("Attendence"));
 		tabLayout.addTab(tabLayout.newTab().setText("Find SDian"));
-
+		viewPager.setOnPageChangeListener(onPageChangeListener);
+		viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+		tabLayout.setupWithViewPager(viewPager);
 	}
+
+	OnPageChangeListener onPageChangeListener = new OnPageChangeListener() {
+
+		@Override
+		public void onPageScrolled(int position, float positionOffset,
+				int positionOffsetPixels) {
+
+		}
+
+		@Override
+		public void onPageSelected(int position) {
+			viewPager.setCurrentItem(position, true);
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int state) {
+
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -39,4 +69,29 @@ public class DahsboardActivity extends AppCompatActivity {
 
 		return super.onOptionsItemSelected(item);
 	}
+
+	public class MyPagerAdapter extends FragmentPagerAdapter {
+
+		public MyPagerAdapter(FragmentManager fragmentManager) {
+			super(fragmentManager);
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			switch (position) {
+				case 0 :
+					return new AttendenceFragment();
+				case 1 :
+					return new AttendenceFragment();
+
+			}
+			return null;
+		}
+
+		@Override
+		public int getCount() {
+			return 2;
+		}
+	}
+
 }
