@@ -39,6 +39,7 @@
                       android:layout_height="wrap_content"
                       android:layout_marginLeft="25dp"
                       android:layout_marginRight="25dp"
+                      android:paddingLeft="5dp"
                       android:digits="0123456789"
                       android:hint="Enter your Employee Code"
                       android:inputType="number"
