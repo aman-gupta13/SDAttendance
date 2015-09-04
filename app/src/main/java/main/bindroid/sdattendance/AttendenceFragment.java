@@ -3,9 +3,11 @@ package main.bindroid.sdattendance;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Switch;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -26,6 +28,7 @@ import main.bindroid.sdattendance.utills.CommonUtils;
 public class AttendenceFragment extends Fragment {
 
 	private List<ParseObject> mObjects;
+	private Switch toggle;
 
 	/**
 	 * Use this factory method to create a new instance of this fragment using
@@ -60,17 +63,23 @@ public class AttendenceFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.fragment_attendence, container, false);
+		View view = inflater.inflate(R.layout.fragment_attendence, container,
+				false);
+		toggle = (Switch) view.findViewById(R.id.autoToggle);
+		return view;
 	}
 
 	private void callNetworkRequestForData() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDLoginData");
+		Log.d("empcode", CommonUtils.getLoggedInUser(getActivity())
+				.getEmpCode());
 		query.whereEqualTo("EmpCode", CommonUtils
 				.getLoggedInUser(getActivity()).getEmpCode());
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
+				Log.d("object size", "" + objects.size());
 				if (e == null && objects.size() > 0) {
 					mObjects = objects;
 					// Todo: update your recycler adapter

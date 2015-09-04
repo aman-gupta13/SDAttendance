@@ -16,9 +16,12 @@ import android.util.Log;
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.parse.ParseObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import main.bindroid.sdattendance.utills.CommonUtils;
 
 public class MyService extends Service {
 
@@ -66,21 +69,17 @@ public class MyService extends Service {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						postNotification(getString(R.string.status_entered_region));
-						// new Thread(new Runnable() {
-						// public void run() {
-						// sendData(Globals.URL_PREFIX_CHECKIN);
-						// }
-						// }).start();
+						ParseObject loginData = new ParseObject("SDLoginData");
+						loginData.put(
+								"EmpCode",
+								CommonUtils.getLoggedInUser(
+										getApplicationContext()).getEmpCode());
+						loginData.saveInBackground();
 					}
 
 					@Override
 					public void onExitedRegion(final Region region) {
 						postNotification(getString(R.string.status_exited_region));
-						// new Thread(new Runnable() {
-						// public void run() {
-						// sendData(Globals.URL_PREFIX_CHECKOUT);
-						// }
-						// }).start();
 					}
 				});
 	}
