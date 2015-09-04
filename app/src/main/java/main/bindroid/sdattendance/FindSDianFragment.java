@@ -2,15 +2,18 @@ package main.bindroid.sdattendance;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.renderscript.ScriptGroup.Input;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
@@ -93,6 +96,8 @@ public class FindSDianFragment extends Fragment
 		field.setClickable(false);
 		Button find = (Button) getView().findViewById(R.id.find);
 		searchBy = (Button) getView().findViewById(R.id.searchby);
+
+
 		searchBy.setText("Search by Name");
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
@@ -179,20 +184,37 @@ public class FindSDianFragment extends Fragment
 				final Dialog dia = new Dialog(getActivity());
 				dia.requestWindowFeature(Window.FEATURE_NO_TITLE);
 				dia.setContentView(R.layout.filter_dialog_layout);
+				RadioButton nameButton, employeeIdButton;
+				nameButton = (RadioButton) dia.findViewById(R.id.radioName);
+				employeeIdButton = (RadioButton) dia.findViewById(R.id.radioId);
+				if (search != null && search.equalsIgnoreCase("name")) {
+					nameButton.setChecked(true);
+					employeeIdButton.setChecked(false);
+				} else
+					if (search != null
+							&& search.equalsIgnoreCase("Employee Id")) {
+					nameButton.setChecked(false);
+					employeeIdButton.setChecked(true);
+				}
 				RadioGroup radioGroup = (RadioGroup) dia
 						.findViewById(R.id.radioCategory);
 
-				radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				radioGroup.setOnCheckedChangeListener(
+						new OnCheckedChangeListener() {
 
 							@Override
-							public void onCheckedChanged(RadioGroup group, int checkedId) {
+							public void onCheckedChanged(RadioGroup group,
+									int checkedId) {
 								field.setClickable(true);
 								switch (checkedId) {
-									case R.id.radioName:
+									case R.id.radioName :
 										search = "Name";
-
+										field.setInputType(
+												InputType.TYPE_CLASS_TEXT);
 										break;
-									case R.id.radioId:
+									case R.id.radioId :
+										field.setInputType(
+												InputType.TYPE_CLASS_NUMBER);
 										search = "Employee Id";
 										break;
 								}
