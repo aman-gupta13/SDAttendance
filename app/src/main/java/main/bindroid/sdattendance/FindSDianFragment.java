@@ -223,16 +223,15 @@ public class FindSDianFragment extends Fragment
 	private CharSequence getSortFilterTitle(String title, String words) {
 
 		SpannableString sb = new SpannableString(title);
-		sb.setSpan(
-				new TextAppearanceSpan(getActivity(), R.style.sort_filer_title),
-				0, title.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		sb.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.sort_filer_title), 0, title.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		String displayName = words.toUpperCase();
 		SpannableString filterWord = new SpannableString(displayName);
-		filterWord.setSpan(
-				new TextAppearanceSpan(getActivity(),
-						R.style.selected_sort_filter),
-				0, displayName.length(), Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+		filterWord.setSpan(new TextAppearanceSpan(getActivity(),
+				R.style.selected_sort_filter), 0, displayName.length(),
+				Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
 
 		return TextUtils.concat(sb, filterWord);
 	}
@@ -286,7 +285,7 @@ public class FindSDianFragment extends Fragment
 		for (int i = 0; i < objects.size(); i++) {
 			ParseObject userObject = objects.get(i);
 			String code = userObject.getString("EmpCode");
-			if (code.equalsIgnoreCase(str)) {
+			if (code.startsWith(str)) {
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
