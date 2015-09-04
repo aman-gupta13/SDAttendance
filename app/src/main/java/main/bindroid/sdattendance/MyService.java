@@ -8,15 +8,20 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.IBinder;
 import android.os.RemoteException;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.parse.GetCallback;
+import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +39,9 @@ public class MyService extends Service {
 	private NotificationManager mNotificationManager;
 	private Region mRegion;
 	private SharedPreferences mPreferences;
+	private String loginId;
 
+	private SharedPreferences pref;
 	public MyService() {
 	}
 
@@ -42,6 +49,9 @@ public class MyService extends Service {
 	public void onCreate() {
 		// Configure verbose debug logging, enable this to debugging
 		// L.enableDebugLogging(true);
+		pref = PreferenceManager.getDefaultSharedPreferences(
+				getApplicationContext());
+		loginId = pref.getString("key","");
 
 		mRegion = new Region(Globals.REGION, Globals.PROXIMITY_UUID,
 				Globals.MAJOR, Globals.MINOR);
@@ -69,17 +79,40 @@ public class MyService extends Service {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						postNotification(getString(R.string.status_entered_region));
-						ParseObject loginData = new ParseObject("SDLoginData");
-						loginData.put(
-								"EmpCode",
-								CommonUtils.getLoggedInUser(
-										getApplicationContext()).getEmpCode());
-						loginData.saveInBackground();
+						if(loginId.equalsIgnoreCase("") || loginId == null || loginId.equalsIgnoreCase("null"))
+						{
+							ParseObject loginData = new ParseObject("SDLoginData");
+							loginData.put(
+									"EmpCode",
+									CommonUtils.getLoggedInUser(getApplicationContext()).getEmpCode());
+							loginData.put("LoginDate",
+									CommonUtils.getDate(System.currentTimeMillis()));
+							loginData.saveInBackground();
+							Editor edit = pref.edit();
+							edit.putString("key",loginData.getObjectId());
+						}
+						else
+						{
+							ParseQuery query = ParseQuery.getQuery("SDLoginData");
+							query.getInBackground(loginId, new GetCallback() {
+								@Override
+								public void done(ParseObject object, ParseException e) {
+									object.put("LogoutTime", CommonUtils.getTime(System.currentTimeMillis()));
+									object.saveInBackground();
+								}
+
+
+							});
+
+
+						}
+
+
 					}
 
 					@Override
 					public void onExitedRegion(final Region region) {
-						postNotification(getString(R.string.status_exited_region));
+						// postNotification(getString(R.string.status_exited_region));
 					}
 				});
 	}
@@ -122,38 +155,32 @@ public class MyService extends Service {
 	}
 
 	private void postNotification(String msg) {
-		Intent notifyIntent = new Intent(MyService.this, MainActivity.class);
-		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		notifyIntent.putExtra(MainActivity.EXTRA_STATUS_TEXT, msg);
-
 		PendingIntent pendingIntent = PendingIntent.getActivities(
-				MyService.this, 0, new Intent[]{notifyIntent},
+				MyService.this, 0, new Intent[]{new Intent()},
 				PendingIntent.FLAG_UPDATE_CURRENT);
-
 		NotificationCompat.Builder notification = new NotificationCompat.Builder(
 				MyService.this).setSmallIcon(R.drawable.beacon_gray)
 				.setContentTitle(getString(R.string.last_post_notification))
 				.setContentText(msg).setAutoCancel(true)
 				.setContentIntent(pendingIntent)
 				.setDefaults(Notification.DEFAULT_ALL);
-
 		mNotificationManager.notify(WHOS_FANCY_NOTIFICATION_ID,
 				notification.build());
 	}
 
-	private void setNotification() {
-		Intent notificationIntent = new Intent(this, MainActivity.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
-
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(
-				MyService.this).setSmallIcon(R.drawable.beacon_gray)
-				.setContentTitle(getString(R.string.app_name))
-				.setContentText(getString(R.string.waiting_notification))
-				.setContentIntent(pendingIntent);
-
-		startForeground(WHOS_FANCY_SERVICE_NOTIFICATION_ID,
-				notification.build());
-	}
+	// private void setNotification() {
+	// Intent notificationIntent = new Intent(this, MainActivity.class);
+	// PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+	// notificationIntent, 0);
+	//
+	// NotificationCompat.Builder notification = new NotificationCompat.Builder(
+	// MyService.this).setSmallIcon(R.drawable.beacon_gray)
+	// .setContentTitle(getString(R.string.app_name))
+	// .setContentText(getString(R.string.waiting_notification))
+	// .setContentIntent(pendingIntent);
+	//
+	// startForeground(WHOS_FANCY_SERVICE_NOTIFICATION_ID,
+	// notification.build());
+	// }
 
 }

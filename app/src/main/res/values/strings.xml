@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">SD Attendance</string>
+    <string name="app_name">SD Campus</string>
 
     <string name="action_start">start</string>
     <string name="action_stop">stop</string>
     <string name="action_settings">settings</string>
-    <string name="last_post_notification">Last posted notification:</string>
+    <string name="last_post_notification">Attendance Updated</string>
     <string name="none">None</string>
-    <string name="status_entered_region">Entered into region</string>
+    <string name="status_entered_region">Entered into Attendance Region</string>
     <string name="status_exited_region">Exited from region</string>
     <string name="waiting_notification">waiting notification</string>
     <string name="device_no_ble">Device does not have Bluetooth Low Energy</string>
