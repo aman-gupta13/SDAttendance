@@ -74,12 +74,14 @@ public class MyService extends Service {
 								"EmpCode",
 								CommonUtils.getLoggedInUser(
 										getApplicationContext()).getEmpCode());
+						loginData.put("LoginDate",
+								CommonUtils.getDate(System.currentTimeMillis()));
 						loginData.saveInBackground();
 					}
 
 					@Override
 					public void onExitedRegion(final Region region) {
-						postNotification(getString(R.string.status_exited_region));
+//						postNotification(getString(R.string.status_exited_region));
 					}
 				});
 	}
@@ -122,38 +124,31 @@ public class MyService extends Service {
 	}
 
 	private void postNotification(String msg) {
-		Intent notifyIntent = new Intent(MyService.this, MainActivity.class);
-		notifyIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-		notifyIntent.putExtra(MainActivity.EXTRA_STATUS_TEXT, msg);
-
 		PendingIntent pendingIntent = PendingIntent.getActivities(
-				MyService.this, 0, new Intent[]{notifyIntent},
-				PendingIntent.FLAG_UPDATE_CURRENT);
-
+				MyService.this, 0, null, PendingIntent.FLAG_UPDATE_CURRENT);
 		NotificationCompat.Builder notification = new NotificationCompat.Builder(
 				MyService.this).setSmallIcon(R.drawable.beacon_gray)
 				.setContentTitle(getString(R.string.last_post_notification))
 				.setContentText(msg).setAutoCancel(true)
 				.setContentIntent(pendingIntent)
 				.setDefaults(Notification.DEFAULT_ALL);
-
 		mNotificationManager.notify(WHOS_FANCY_NOTIFICATION_ID,
 				notification.build());
 	}
 
-	private void setNotification() {
-		Intent notificationIntent = new Intent(this, MainActivity.class);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
-				notificationIntent, 0);
-
-		NotificationCompat.Builder notification = new NotificationCompat.Builder(
-				MyService.this).setSmallIcon(R.drawable.beacon_gray)
-				.setContentTitle(getString(R.string.app_name))
-				.setContentText(getString(R.string.waiting_notification))
-				.setContentIntent(pendingIntent);
-
-		startForeground(WHOS_FANCY_SERVICE_NOTIFICATION_ID,
-				notification.build());
-	}
+	// private void setNotification() {
+	// Intent notificationIntent = new Intent(this, MainActivity.class);
+	// PendingIntent pendingIntent = PendingIntent.getActivity(this, 0,
+	// notificationIntent, 0);
+	//
+	// NotificationCompat.Builder notification = new NotificationCompat.Builder(
+	// MyService.this).setSmallIcon(R.drawable.beacon_gray)
+	// .setContentTitle(getString(R.string.app_name))
+	// .setContentText(getString(R.string.waiting_notification))
+	// .setContentIntent(pendingIntent);
+	//
+	// startForeground(WHOS_FANCY_SERVICE_NOTIFICATION_ID,
+	// notification.build());
+	// }
 
 }

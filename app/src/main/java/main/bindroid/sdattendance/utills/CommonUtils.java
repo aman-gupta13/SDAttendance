@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -102,19 +103,15 @@ public class CommonUtils {
 		}
 	}
 
-	public static String getDate(String milisecond) {
-		if (milisecond == null || milisecond.equals("null"))
+	public static String getDate(long milisecond) {
+		if (TextUtils.isEmpty("" + milisecond))
 			return "";
 		Date date = new Date(milisecond);
-
 		String stringMonth = (String) android.text.format.DateFormat.format(
 				"MMM", date);
-
 		String year = (String) android.text.format.DateFormat.format("yyyy",
 				date);
 		String day = (String) android.text.format.DateFormat.format("dd", date);
-
 		return day + " " + stringMonth + " " + year;
-
 	}
 }
