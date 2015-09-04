@@ -226,6 +226,7 @@ public class FindSDianFragment extends Fragment
 		}
 
 		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
+		field.requestFocus();
 
 	}
 
@@ -283,6 +284,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpDept(userObject.getString("EmpDepartment"));
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -302,6 +304,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}
@@ -322,6 +325,7 @@ public class FindSDianFragment extends Fragment
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setEmpMobile("+911244330082");
+				item.setExt("12345");
 				list.add(item);
 				adapter.notifyDataSetChanged();
 			}

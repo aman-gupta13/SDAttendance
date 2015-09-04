@@ -11,6 +11,15 @@ public class FeedItem {
 	private String empDept;
 	private String empSeat;
 	private String empEmail;
+	private String ext;
+
+	public String getExt() {
+		return ext;
+	}
+
+	public void setExt(String ext) {
+		this.ext = ext;
+	}
 
 	public String getEmpEmail() {
 		return empEmail;
