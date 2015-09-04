@@ -153,7 +153,7 @@ public class CommonUtils {
 	}
 
 	public static String getDate(Long milisecond) {
-		if (milisecond == null || milisecond > 0)
+		if (milisecond == null || milisecond == 0)
 
 			return "";
 		Date date = new Date(milisecond);
@@ -166,7 +166,7 @@ public class CommonUtils {
 	}
 
 	public static String getTime(Long mili) {
-		if (mili == null || mili > 0)
+		if (mili == null || mili == 0)
 			return "";
 		Date date = new Date(mili);
 		// System.out.println("Date: " + date);
