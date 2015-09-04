@@ -1,6 +1,9 @@
 package main.bindroid.sdattendance;
 
-import android.net.Uri;
+import java.util.List;
+
+import main.bindroid.sdattendance.utills.CommonUtils;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,10 +14,6 @@ import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
-
-import java.util.List;
-
-import main.bindroid.sdattendance.utills.CommonUtils;
 
 /**
  * A simple {@link Fragment} subclass. Activities that contain this fragment
@@ -65,8 +64,8 @@ public class AttendenceFragment extends Fragment {
 
 	private void callNetworkRequestForData() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDLoginData");
-		query.whereEqualTo("EmpCode", CommonUtils
-				.getLoggedInUser(getActivity()).getEmpCode());
+		query.whereEqualTo("EmpCode",
+				CommonUtils.getLoggedInUser(getActivity()).getEmpCode());
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
