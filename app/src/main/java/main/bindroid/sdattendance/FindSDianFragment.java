@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +36,8 @@ import java.util.List;
  */
 public class FindSDianFragment extends Fragment
 		implements
-			View.OnClickListener {
+			View.OnClickListener,
+			TextWatcher {
 
 	private RecyclerView mRecyclerView;
 	private List<FeedItem> list;
@@ -90,6 +93,7 @@ public class FindSDianFragment extends Fragment
 
 	private void initWidget() {
 		field = (EditText) getView().findViewById(R.id.editText);
+		field.addTextChangedListener(this);
 		field.setClickable(false);
 		Button find = (Button) getView().findViewById(R.id.find);
 		searchBy = (Button) getView().findViewById(R.id.searchby);
@@ -122,7 +126,11 @@ public class FindSDianFragment extends Fragment
 		 */
 
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee");
-		query.whereEqualTo(fieldName, value);
+		if (fieldName.equalsIgnoreCase("EmpName")) {
+			//query.whereMatches(fieldName, value);
+		} else {
+			query.whereEqualTo(fieldName, value);
+		}
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
@@ -130,28 +138,11 @@ public class FindSDianFragment extends Fragment
 
 				if (e == null) {
 					for (int i = 0; i < objects.size(); i++) {
-
-						ParseQuery<ParseObject> query = ParseQuery
-								.getQuery("SDEmployee");
-						query.getInBackground(objects.get(i).getObjectId(),
-								new GetCallback<ParseObject>() {
-
-							@Override
-							public void done(ParseObject arg0,
-									ParseException arg1) {
-								// TODO Auto-generated method stub
-
-								if (arg1 == null) {
-									FeedItem item = new FeedItem();
-									item.setEmpName(arg0.getString("EmpName"));
-									list.add(item);
-									adapter.notifyDataSetChanged();
-
-								} else {
-
-								}
-							}
-						});
+						ParseObject userObject = objects.get(i);
+						FeedItem item = new FeedItem();
+						item.setEmpName(userObject.getString("EmpName"));
+						list.add(item);
+						adapter.notifyDataSetChanged();
 
 					}
 					// Log.d("score", "Retrieved " + scoreList.size() +
@@ -169,6 +160,7 @@ public class FindSDianFragment extends Fragment
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.find :
+				list.clear();
 				if (search.equalsIgnoreCase("Name"))
 					parse("EmpName", field.getText().toString());
 				else if (search.equalsIgnoreCase("Employee Id"))
@@ -182,21 +174,24 @@ public class FindSDianFragment extends Fragment
 				RadioGroup radioGroup = (RadioGroup) dia
 						.findViewById(R.id.radioCategory);
 
-				radioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				radioGroup
+						.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 							@Override
-							public void onCheckedChanged(RadioGroup group, int checkedId) {
+							public void onCheckedChanged(RadioGroup group,
+									int checkedId) {
 								field.setClickable(true);
 								switch (checkedId) {
-									case R.id.radioName:
+									case R.id.radioName :
 										search = "Name";
 
 										break;
-									case R.id.radioId:
+									case R.id.radioId :
 										search = "Employee Id";
 										break;
 								}
 								searchBy.setText("Search by " + search);
+								// dia.cancel();
 							}
 						});
 				dia.show();
@@ -204,4 +199,26 @@ public class FindSDianFragment extends Fragment
 		}
 	}
 
+	@Override
+	public void beforeTextChanged(CharSequence charSequence, int i, int i1,
+			int i2) {
+
+	}
+
+	@Override
+	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+	}
+
+	@Override
+	public void afterTextChanged(Editable editable) {
+
+		list.clear();
+
+		if (search.equalsIgnoreCase("Name"))
+			parse("EmpName", field.getText().toString());
+		else if (search.equalsIgnoreCase("Employee Id"))
+			parse("EmpCode", field.getText().toString());
+
+	}
 }
