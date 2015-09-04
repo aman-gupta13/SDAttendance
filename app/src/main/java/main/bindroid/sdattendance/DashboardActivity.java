@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
@@ -14,6 +16,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -85,10 +88,35 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout.setOnTabSelectedListener(
-				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+		tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
+
+		int[][] states = new int[][] {
+				new int[] { android.R.attr.state_checked}, // enabled
+				new int[] { android.R.attr.state_enabled}, // enabled
+				new int[] {-android.R.attr.state_enabled}, // disabled
+				new int[] {-android.R.attr.state_checked}, // unchecked
+				new int[] { android.R.attr.state_pressed}  // pressed
+		};
+
+		int[] colors = new int[] {
+				Color.WHITE,
+				Color.WHITE,Color.WHITE,Color.WHITE,Color.WHITE
+
+		};
+
+		ColorStateList myList = new ColorStateList(states, colors);
+		//tabLayout.setTabTextColors(Color.WHITE,Color.WHITE);//.setTabTextColors(myList);
 
 	}
+
+
+	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {
+		@Override
+		public void onTabChanged(String tabId) {
+
+		}
+	};
 
 	@Override
 	protected void onStart() {
