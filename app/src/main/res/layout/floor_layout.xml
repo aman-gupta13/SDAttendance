@@ -5,6 +5,35 @@
               android:orientation="vertical"
     >
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#2196f3">
+
+        <ImageView
+            android:id="@+id/sdlogo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/sd_icon"
+            />
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/sdlogo"
+            android:gravity="center"
+            android:text="Seat Location"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            />
+
+
+    </RelativeLayout>
+
     <main.bindroid.sdattendance.FloorView
         android:id="@+id/floor"
         android:layout_width="wrap_content"

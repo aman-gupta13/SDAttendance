@@ -63,20 +63,27 @@ public class FloorView extends ImageView {
 		this.loc = loc;
 	}
 
-	Location loc;
+	private Location loc;
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		double ratioX = (double) getMeasuredWidth() / (double) 468;
-		double ratioY = (double) getMeasuredHeight() / (double) 469;
-		setImageLocX(loc.getX() * ratioX - 30);
-		setImageLocY(loc.getY() * ratioY - 15);
-		invalidate();
+
 		return super.onTouchEvent(event);
 	}
 
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+		postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				double ratioX = (double) getMeasuredWidth() / (double) 468;
+				double ratioY = (double) getMeasuredHeight() / (double) 469;
+				setImageLocX(loc.getX() * ratioX - 30);
+				setImageLocY(loc.getY() * ratioY - 15);
+				invalidate();
+			}
+		}, 1000);
 	}
 }

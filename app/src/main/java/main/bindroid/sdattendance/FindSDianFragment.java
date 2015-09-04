@@ -109,6 +109,7 @@ public class FindSDianFragment extends Fragment
 		mRecyclerView = (RecyclerView) getView()
 				.findViewById(R.id.recyclerview);
 		mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		adapter.setOnClickListener(this);
 		mRecyclerView.setAdapter(adapter);
 		find.setOnClickListener(this);
 		searchBy.setOnClickListener(this);
@@ -169,11 +170,13 @@ public class FindSDianFragment extends Fragment
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
 
 					findByName(obj, field.getText().toString());
-				else if (searchByText
-						.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				else
+					if (searchByText
+							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					findById(obj, field.getText().toString());
-				else if (searchByText
-						.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+				else
+						if (searchByText
+								.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
 					findByDept(obj, field.getText().toString());
 				break;
 
@@ -186,6 +189,13 @@ public class FindSDianFragment extends Fragment
 				searchByFragment.setArguments(bundle);
 				searchByFragment.setTargetFragment(this, REQUEST_ID);
 				searchByFragment.show(fragmentManager, "searchBy");
+				break;
+			case R.id.mainView :
+
+				Intent intent = new Intent(getActivity(), FloorActivity.class);
+				intent.putExtra("SeatNumber", view.getTag().toString());
+				startActivity(intent);
+				break;
 
 		}
 	}
@@ -195,8 +205,8 @@ public class FindSDianFragment extends Fragment
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
 
-			searchByText = data.getExtras().getString(
-					SearchByFragment.SEARCH_BY_KEY);
+			searchByText = data.getExtras()
+					.getString(SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
 			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
@@ -221,7 +231,8 @@ public class FindSDianFragment extends Fragment
 	}
 
 	@Override
-	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+	public void onTextChanged(CharSequence charSequence, int i, int i1,
+			int i2) {
 
 	}
 

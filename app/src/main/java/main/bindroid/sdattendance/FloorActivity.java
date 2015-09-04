@@ -13,7 +13,9 @@ public class FloorActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.floor_layout);
 		FloorView floorView = (FloorView) findViewById(R.id.floor);
-		floorView.setLocation(LocationMap.getInstance().getLocation("CA3144"));
+
+		floorView.setLocation(LocationMap.getInstance()
+				.getLocation(getIntent().getStringExtra("SeatNumber")));
 
 	}
 
