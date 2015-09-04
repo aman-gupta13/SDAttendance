@@ -20,6 +20,9 @@ import com.parse.ParseQuery;
 
 import java.util.List;
 
+import main.bindroid.sdattendance.beans.SDEmployee;
+import main.bindroid.sdattendance.utills.CommonUtils;
+
 public class LoginActivity extends AppCompatActivity {
 
 	private ImageView snapdealImageView;
@@ -31,6 +34,11 @@ public class LoginActivity extends AppCompatActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		if (CommonUtils.getLoggedInUser(getApplicationContext()) != null) {
+			startActivity(new Intent(LoginActivity.this,
+					DashboardActivity.class));
+			finish();
+		}
 		snapdealImageView = (ImageView) findViewById(R.id.sdlogo);
 		mainLinearLayout = (LinearLayout) findViewById(R.id.mainLinear);
 		getInText = (TextView) findViewById(R.id.getInTv);
@@ -53,31 +61,55 @@ public class LoginActivity extends AppCompatActivity {
 			Toast.makeText(LoginActivity.this, "Oops!! You missed something!!",
 					Toast.LENGTH_LONG).show();
 		} else {
-			ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee");
-			query.whereEqualTo("EmpCode", empCodeET.getText().toString());
-			query.findInBackground(new FindCallback<ParseObject>() {
+			if (CommonUtils.isConnectingToInternet(getApplicationContext())) {
+				ParseQuery<ParseObject> query = ParseQuery
+						.getQuery("SDEmployee");
+				query.whereEqualTo("EmpCode", empCodeET.getText().toString());
+				query.findInBackground(new FindCallback<ParseObject>() {
 
-				@Override
-				public void done(List<ParseObject> objects, ParseException e) {
-					Log.d("Parser", "inside done");
+					@Override
+					public void
+							done(List<ParseObject> objects, ParseException e) {
+						Log.d("Parser", "inside done");
 
-					if (e == null && objects != null && objects.size() > 0) {
-						Toast.makeText(
-								LoginActivity.this,
-								"Welcome To Snapdeal "
-										+ objects.get(0).getString("EmpName"),
-								Toast.LENGTH_LONG).show();
-						
-						startActivity(new Intent(LoginActivity.this,
-								DashboardActivity.class));
-						finish();
-					} else {
-						Toast.makeText(LoginActivity.this,
-								"Oops!! I don't know you!! Sorry!!",
-								Toast.LENGTH_LONG).show();
+						if (e == null && objects != null && objects.size() > 0) {
+							Toast.makeText(
+									LoginActivity.this,
+									"Welcome To Snapdeal "
+											+ objects.get(0).getString(
+													"EmpName"),
+									Toast.LENGTH_LONG).show();
+							SDEmployee employee = new SDEmployee();
+							employee.setEmpCode(objects.get(0).getString(
+									"EmpCode"));
+							employee.setEmpName(objects.get(0).getString(
+									"EmpName"));
+							employee.setEmpSeat(objects.get(0).getString(
+									"EmpSeat"));
+							employee.setEmpFloor(objects.get(0).getString(
+									"EmpFloor"));
+							employee.setEmpDepartment(objects.get(0).getString(
+									"EmpDepartment"));
+							employee.setEmpUnit(objects.get(0).getString(
+									"EmpUnit"));
+							employee.setEmpTeam(objects.get(0).getString(
+									"EmpTeam"));
+							CommonUtils.setLoggedInUser(
+									getApplicationContext(), employee);
+							startActivity(new Intent(LoginActivity.this,
+									DashboardActivity.class));
+							finish();
+						} else {
+							Toast.makeText(LoginActivity.this,
+									"Oops!! I don't know you!! Sorry!!",
+									Toast.LENGTH_LONG).show();
+						}
 					}
-				}
-			});
+				});
+			} else {
+				Toast.makeText(LoginActivity.this,
+						"Looks like Internet is Off", Toast.LENGTH_LONG).show();
+			}
 		}
 	}
 
