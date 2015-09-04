@@ -67,8 +67,10 @@ public class LoginActivity extends AppCompatActivity {
 								"Welcome To Snapdeal "
 										+ objects.get(0).getString("EmpName"),
 								Toast.LENGTH_LONG).show();
+						
 						startActivity(new Intent(LoginActivity.this,
 								DashboardActivity.class));
+						finish();
 					} else {
 						Toast.makeText(LoginActivity.this,
 								"Oops!! I don't know you!! Sorry!!",
