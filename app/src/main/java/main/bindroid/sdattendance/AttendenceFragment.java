@@ -1,5 +1,6 @@
 package main.bindroid.sdattendance;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -99,6 +100,10 @@ public class AttendenceFragment extends Fragment {
 				attendenceTogleStateListener.onTogleStateChange(b);
 			}
 		});
+		if (getActivity().getSharedPreferences("SDAttendance",
+				Context.MODE_PRIVATE).getBoolean("service", false)) {
+			toggle.setChecked(true);
+		}
 		return view;
 	}
 

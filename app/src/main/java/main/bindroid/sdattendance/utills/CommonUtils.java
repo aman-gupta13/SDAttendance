@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import main.bindroid.sdattendance.beans.SDEmployee;
 
 /**
@@ -42,17 +44,17 @@ public class CommonUtils {
 	}
 
 	public static void setLoggedInUser(Context context, SDEmployee employee) {
-		SharedPreferences sharedPreferences = context
-				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				"SDAttendance", Context.MODE_PRIVATE);
 		Editor editor = sharedPreferences.edit();
-		editor.putString("LoggedInUser",
-				changeEmployeeToJson(employee).toString());
+		editor.putString("LoggedInUser", changeEmployeeToJson(employee)
+				.toString());
 		editor.commit();
 	}
 
 	public static SDEmployee getLoggedInUser(Context context) {
-		SharedPreferences sharedPreferences = context
-				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE);
+		SharedPreferences sharedPreferences = context.getSharedPreferences(
+				"SDAttendance", Context.MODE_PRIVATE);
 		if (sharedPreferences.getString("LoggedInUser", null) != null) {
 			try {
 				return changeJsonToEmployee(new JSONObject(
@@ -98,5 +100,21 @@ public class CommonUtils {
 		} else {
 			return null;
 		}
+	}
+
+	public static String getDate(String milisecond) {
+		if (milisecond == null || milisecond.equals("null"))
+			return "";
+		Date date = new Date(milisecond);
+
+		String stringMonth = (String) android.text.format.DateFormat.format(
+				"MMM", date);
+
+		String year = (String) android.text.format.DateFormat.format("yyyy",
+				date);
+		String day = (String) android.text.format.DateFormat.format("dd", date);
+
+		return day + " " + stringMonth + " " + year;
+
 	}
 }
