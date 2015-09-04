@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.support.design.widget.TabLayout;
@@ -14,12 +16,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.estimote.sdk.Beacon;
 import com.estimote.sdk.BeaconManager;
 import com.estimote.sdk.Region;
+import com.parse.ParseObject;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -60,12 +64,22 @@ public class DashboardActivity extends AppCompatActivity {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						// Todo: do something when region entered
+						if (CommonUtils
+								.isConnectingToInternet(getApplicationContext())) {
+							ParseObject loginData = new ParseObject(
+									"SDLoginData");
+							loginData.put("EmpCode", CommonUtils
+									.getLoggedInUser(getApplicationContext())
+									.getEmpCode());
+							loginData.saveInBackground();
+						}
 					}
 
 					@Override
 					public void onExitedRegion(final Region region) {
 						// Todo: do something when region exited
 					}
+
 				});
 		// starting beacon service here if bluetooth is on and never started
 		if (!getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
@@ -85,10 +99,35 @@ public class DashboardActivity extends AppCompatActivity {
 		viewPager.setOnPageChangeListener(onPageChangeListener);
 		viewPager.setAdapter(myAdapter);
 		tabLayout.setupWithViewPager(viewPager);
-		tabLayout.setOnTabSelectedListener(
-				new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+		tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
+
+		int[][] states = new int[][] {
+				new int[] { android.R.attr.state_checked}, // enabled
+				new int[] { android.R.attr.state_enabled}, // enabled
+				new int[] {-android.R.attr.state_enabled}, // disabled
+				new int[] {-android.R.attr.state_checked}, // unchecked
+				new int[] { android.R.attr.state_pressed}  // pressed
+		};
+
+		int[] colors = new int[] {
+				Color.WHITE,
+				Color.WHITE,Color.WHITE,Color.WHITE,Color.WHITE
+
+		};
+
+		ColorStateList myList = new ColorStateList(states, colors);
+		//tabLayout.setTabTextColors(Color.WHITE,Color.WHITE);//.setTabTextColors(myList);
 
 	}
+
+
+	OnTabChangeListener tabChangeListener = new OnTabChangeListener() {
+		@Override
+		public void onTabChanged(String tabId) {
+
+		}
+	};
 
 	@Override
 	protected void onStart() {

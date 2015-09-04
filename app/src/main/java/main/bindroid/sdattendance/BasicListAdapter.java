@@ -39,6 +39,8 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 			holder.dept.setText(feedItem.getEmpDept());
 			holder.name.setText(feedItem.getEmpName());
 			holder.seat.setText(feedItem.getEmpSeat());
+			holder.email.setText(feedItem.getEmpEmail());
+
 		}
 
 	}
