@@ -3,6 +3,8 @@ package main.bindroid.sdattendance;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import main.bindroid.sdattendance.utills.CommonUtils;
@@ -26,6 +29,9 @@ import main.bindroid.sdattendance.utills.CommonUtils;
 public class AttendenceFragment extends Fragment {
 
 	private List<ParseObject> mObjects;
+	private RecyclerView recyclerView;
+	private AttendenceListAdapter adapter;
+	private List<AttendenceRowItem> list;
 
 	/**
 	 * Use this factory method to create a new instance of this fragment using
@@ -51,9 +57,22 @@ public class AttendenceFragment extends Fragment {
 	}
 
 	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		recyclerView = (RecyclerView) getView()
+				.findViewById(R.id.recyclerviewAttendence);
+		recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+		list = new ArrayList<AttendenceRowItem>();
+		adapter = new AttendenceListAdapter(getActivity(), list);
+		recyclerView.setAdapter(adapter);
+		callNetworkRequestForData();
+
+	}
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		callNetworkRequestForData();
+
 	}
 
 	@Override
@@ -61,12 +80,13 @@ public class AttendenceFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_attendence, container, false);
+
 	}
 
 	private void callNetworkRequestForData() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDLoginData");
-		query.whereEqualTo("EmpCode", CommonUtils
-				.getLoggedInUser(getActivity()).getEmpCode());
+		query.whereEqualTo("EmpCode",
+				CommonUtils.getLoggedInUser(getActivity()).getEmpCode());
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
@@ -74,6 +94,19 @@ public class AttendenceFragment extends Fragment {
 				if (e == null && objects.size() > 0) {
 					mObjects = objects;
 					// Todo: update your recycler adapter
+
+					for (int i = 0; i < objects.size(); i++) {
+						ParseObject userObject = objects.get(i);
+						AttendenceRowItem item = new AttendenceRowItem();
+						item.setDate(userObject.getString("LoginDate"));
+						item.setLoginTime(userObject.getString("LoginTime"));
+						item.setLogoutTime(userObject.getString("LogoutTime"));
+						item.setNoOfHours(userObject.getString("WorkHours"));
+						list.add(item);
+						adapter.notifyDataSetChanged();
+					}
+
+
 				} else {
 					// Todo: no data fetched
 				}

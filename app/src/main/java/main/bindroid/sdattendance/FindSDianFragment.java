@@ -50,6 +50,7 @@ public class FindSDianFragment extends Fragment
 	private List<ParseObject> obj;
 	private View mProgressBar;
 	private TextView find;
+	private AttendenceListAdapter attendenceListAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -173,11 +174,13 @@ public class FindSDianFragment extends Fragment
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
 
 					findByName(obj, field.getText().toString());
-				else if (searchByText
-						.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				else
+					if (searchByText
+							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					findById(obj, field.getText().toString());
-				else if (searchByText
-						.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+				else
+						if (searchByText
+								.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
 					findByDept(obj, field.getText().toString());
 				break;
 
@@ -199,8 +202,8 @@ public class FindSDianFragment extends Fragment
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
 
-			searchByText = data.getExtras().getString(
-					SearchByFragment.SEARCH_BY_KEY);
+			searchByText = data.getExtras()
+					.getString(SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
 			if (searchByText.equals(SearchByFragment.EMP_CODE)) {
@@ -243,7 +246,8 @@ public class FindSDianFragment extends Fragment
 	}
 
 	@Override
-	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+	public void onTextChanged(CharSequence charSequence, int i, int i1,
+			int i2) {
 
 	}
 
