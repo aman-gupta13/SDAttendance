@@ -29,7 +29,7 @@
         android:orientation="vertical"
         >
 
-        <EditText
+        <EditText android:id="@+id/empCodeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="25dp"
