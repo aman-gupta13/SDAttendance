@@ -1,12 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingBottom="@dimen/activity_vertical_margin"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin"
-                android:paddingTop="@dimen/activity_vertical_margin"
-                tools:context="main.bindroid.sdattendance.LoginActivity">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="main.bindroid.sdattendance.LoginActivity">
 
     <ImageView
         android:id="@+id/sdlogo"
@@ -30,21 +32,36 @@
         <EditText android:id="@+id/empCodeET"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
             android:hint="Enter your Employee Code"
             android:textSize="20dp"/>
 
-        <TextView
-            android:id="@+id/getInTv"
+
+        <!--android:foreground="?cardItemForeground"-->
+        <android.support.v7.widget.CardView
+            android:id="@+id/signInsignUpView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:background="#ff0000"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Get In"
-            android:textColor="#ffffff"
-            android:textSize="25dp"
-            android:textStyle="bold"/>
+            app:cardBackgroundColor="@color/theme_accent"
+            app:cardCornerRadius="@dimen/get_customer_id_corner_radius">
+
+
+            <TextView
+                android:id="@+id/getInTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="5dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="5dp"
+                android:text="Get In"
+                android:textColor="@color/white"
+                android:textSize="20sp"/>
+
+        </android.support.v7.widget.CardView>
 
 
     </LinearLayout>
