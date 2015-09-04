@@ -17,27 +17,38 @@ public class FloorView extends ImageView {
 	double y = 10;
 	double x = 50;
 
+	private Paint mPaint, paint;
+	private Bitmap bitmap, circle;
+
 	public FloorView(Context context) {
 		super(context);
-
+		init();
 	}
 
 	public FloorView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		init();
 	}
 
 	public FloorView(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
+		init();
+	}
+
+	private void init() {
+		mPaint = new Paint();
+		paint = new Paint();
+		bitmap = BitmapFactory.decodeResource(getResources(),
+				R.drawable.loc_icon);
+
 	}
 
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		Paint mPaint = new Paint();
-		Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.loc_icon);
+
 		canvas.drawBitmap(bitmap, getImageLocX(),
-				getImageLocY() - bitmap.getHeight(), mPaint);
+				getImageLocY() - bitmap.getHeight(), paint);
 
 	}
 
