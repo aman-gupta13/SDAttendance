@@ -169,10 +169,10 @@ public class AttendenceFragment extends Fragment {
 						AttendenceRowItem item = new AttendenceRowItem();
 						item.setDate(DateFormat
 								.getDateInstance(DateFormat.LONG).format(
-										userObject.getCreatedAt()));
-						// + " ("
-						// + new SimpleDateFormat("EE").format(userObject
-						// .getCreatedAt()) + ")");
+										userObject.getCreatedAt())
+								+ " ("
+								+ new SimpleDateFormat("EE").format(userObject
+										.getCreatedAt()) + ")");
 						item.setLoginTime(userObject.getCreatedAt().getHours()
 								+ ":" + userObject.getCreatedAt().getMinutes());
 						item.setLogoutTime(userObject.getUpdatedAt().getHours()

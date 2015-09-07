@@ -87,7 +87,7 @@ public class MyService extends Service {
 									@Override
 									public void done(List<ParseObject> objects,
 											ParseException e) {
-										boolean isCreateNew = false;
+										boolean isCreateNew = true;
 										if (e == null && objects.size() > 0) {
 											for (ParseObject obj : objects) {
 												if (DateFormat
@@ -102,9 +102,8 @@ public class MyService extends Service {
 													obj.put("WorkHours",
 															getWorkHours(obj));
 													obj.saveInBackground();
-													return;
-												} else {
-													isCreateNew = true;
+													isCreateNew=false;
+													break;
 												}
 											}
 											if (isCreateNew) {
