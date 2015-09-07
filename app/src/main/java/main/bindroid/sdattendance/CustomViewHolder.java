@@ -15,6 +15,7 @@ public class CustomViewHolder extends RecyclerView.ViewHolder {
 	public TextView seat;
 	public TextView email;
 	public TextView ext;
+	public TextView id;
 
 	public CustomViewHolder(View view) {
 		super(view);
@@ -24,5 +25,6 @@ public class CustomViewHolder extends RecyclerView.ViewHolder {
 		seat = (TextView) view.findViewById(R.id.person_seat);
 		email = (TextView) view.findViewById(R.id.person_email);
 		ext = (TextView) view.findViewById(R.id.person_ext);
+		id = (TextView) view.findViewById(R.id.emp_code);
 	}
 }

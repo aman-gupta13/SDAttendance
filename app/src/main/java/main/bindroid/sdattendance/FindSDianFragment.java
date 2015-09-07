@@ -67,7 +67,20 @@ public class FindSDianFragment extends Fragment
 		super.onViewCreated(view, savedInstanceState);
 		initWidget();
 
-		parse();
+		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee")
+				.fromLocalDatastore();
+		query.setLimit(1000);
+		query.findInBackground(new FindCallback<ParseObject>() {
+
+			@Override
+			public void done(List<ParseObject> objects, ParseException e) {
+				if (e == null && objects.size() > 0) {
+					FindSDianFragment.this.obj = objects;
+				} else {
+					parse();
+				}
+			}
+		});
 	}
 
 	private int REQUEST_ID = 101;
@@ -123,36 +136,16 @@ public class FindSDianFragment extends Fragment
 	}
 
 	private void parse() {
-		/*
-		 * final ParseObject testObject = new ParseObject("TestObject");
-		 * testObject.put("foo", "bar"); testObject.saveInBackground(new
-		 * SaveCallback() {
-		 *
-		 * @Override public void done(com.parse.ParseException e) {
-		 *
-		 * if (e == null) { // Saved successfully. testObject.getObjectId(); }
-		 * else { // The save failed.
-		 *
-		 * }
-		 *
-		 * }
-		 *
-		 * });
-		 */
 		showProgressbar();
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDEmployee");
 		query.setLimit(1000);
-		/*
-		 * if (fieldName.equalsIgnoreCase("EmpName")) { //
-		 * query.whereMatches(fieldName, value); } else {
-		 * query.whereEqualTo(fieldName, value); }
-		 */
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
 
 				if (e == null) {
+					ParseObject.pinAllInBackground(objects);
 					FindSDianFragment.this.obj = objects;
 					hideProgressbar();
 					// Log.d("score", "Retrieved " + scoreList.size() +
@@ -173,15 +166,12 @@ public class FindSDianFragment extends Fragment
 				list.clear();
 				adapter.notifyDataSetChanged();
 				if (searchByText.equalsIgnoreCase(SearchByFragment.NAME))
-
 					findByName(obj, field.getText().toString());
-				else
-					if (searchByText
-							.equalsIgnoreCase(SearchByFragment.EMP_CODE))
+				else if (searchByText
+						.equalsIgnoreCase(SearchByFragment.EMP_CODE))
 					findById(obj, field.getText().toString());
-				else
-						if (searchByText
-								.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
+				else if (searchByText
+						.equalsIgnoreCase(SearchByFragment.DEPARTMENT))
 					findByDept(obj, field.getText().toString());
 				break;
 
@@ -196,7 +186,6 @@ public class FindSDianFragment extends Fragment
 				searchByFragment.show(fragmentManager, "searchBy");
 				break;
 			case R.id.mainView :
-
 				Intent intent = new Intent(getActivity(), FloorActivity.class);
 				intent.putExtra("SeatNumber", view.getTag().toString());
 				startActivity(intent);
@@ -209,12 +198,10 @@ public class FindSDianFragment extends Fragment
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (data != null && requestCode == REQUEST_ID) {
-
-			searchByText = data.getExtras()
-					.getString(SearchByFragment.SEARCH_BY_KEY);
+			searchByText = data.getExtras().getString(
+					SearchByFragment.SEARCH_BY_KEY);
 			list.clear();
 			adapter.notifyDataSetChanged();
-
 			setSearchTitle();
 		}
 	}
@@ -227,7 +214,6 @@ public class FindSDianFragment extends Fragment
 			field.getText().clear();
 			field.setInputType(InputType.TYPE_CLASS_TEXT);
 		}
-
 		searchBy.setText(getSortFilterTitle("Search By" + "\n", searchByText));
 		field.requestFocus();
 
@@ -255,8 +241,7 @@ public class FindSDianFragment extends Fragment
 	}
 
 	@Override
-	public void onTextChanged(CharSequence charSequence, int i, int i1,
-			int i2) {
+	public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
 	}
 
@@ -284,16 +269,15 @@ public class FindSDianFragment extends Fragment
 				FeedItem item = new FeedItem();
 				item.setEmpName(userObject.getString("EmpName"));
 				item.setEmpId(userObject.getString("EmpCode"));
-				item.setEmpMobile("+911244330082");
+				item.setEmpMobile("+91-99xx99xx00");
 				item.setEmpDept(userObject.getString("EmpDepartment"));
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
 				item.setExt("12345");
 				list.add(item);
-				adapter.notifyDataSetChanged();
 			}
-
 		}
+		adapter.notifyDataSetChanged();
 	}
 
 	private void findById(List<ParseObject> objects, String str) {
@@ -307,14 +291,12 @@ public class FindSDianFragment extends Fragment
 				item.setEmpDept(userObject.getString("EmpDepartment"));
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
-				item.setEmpMobile("+911244330082");
+				item.setEmpMobile("+91-99xx99xx00");
 				item.setExt("12345");
 				list.add(item);
-				adapter.notifyDataSetChanged();
 			}
-
 		}
-
+		adapter.notifyDataSetChanged();
 	}
 
 	private void findByDept(List<ParseObject> objects, String str) {
@@ -328,14 +310,12 @@ public class FindSDianFragment extends Fragment
 				item.setEmpDept(userObject.getString("EmpDepartment"));
 				item.setEmpEmail("xxx@snapdeal.com");
 				item.setEmpSeat(userObject.getString("EmpSeat"));
-				item.setEmpMobile("+911244330082");
+				item.setEmpMobile("+91-99xx99xx00");
 				item.setExt("12345");
 				list.add(item);
-				adapter.notifyDataSetChanged();
 			}
-
 		}
-
+		adapter.notifyDataSetChanged();
 	}
 
 	private void showProgressbar() {
@@ -344,7 +324,6 @@ public class FindSDianFragment extends Fragment
 		field.setClickable(false);
 		searchBy.setClickable(false);
 		find.setClickable(false);
-
 	}
 
 	private void hideProgressbar() {
@@ -353,6 +332,5 @@ public class FindSDianFragment extends Fragment
 		field.setClickable(true);
 		searchBy.setClickable(true);
 		find.setClickable(true);
-
 	}
 }

@@ -30,9 +30,8 @@ public class AttendenceListAdapter
 
 	@Override
 	public CustomViewHolder1 onCreateViewHolder(ViewGroup viewGroup, int i) {
-		View view = LayoutInflater.from(viewGroup.getContext())
-				.inflate(R.layout.attendence_card_view, null);
-
+		View view = LayoutInflater.from(viewGroup.getContext()).inflate(
+				R.layout.attendence_card_view, null);
 		CustomViewHolder1 viewHolder = new CustomViewHolder1(view);
 		return viewHolder;
 	}
@@ -42,9 +41,16 @@ public class AttendenceListAdapter
 		AttendenceRowItem feedItem = feedItemList.get(position);
 		if (feedItem != null) {
 			holder.loginDate.setText(feedItem.getDate());
-			holder.loginTime.setText("Login : " + feedItem.getLoginTime());
-			holder.logoutTime.setText("Logout : " + feedItem.getLogoutTime());
-			holder.noOfHours.setText("Hours : " + feedItem.getNoOfHours());
+			holder.loginTime.setText("Login: " + feedItem.getLoginTime());
+			holder.logoutTime.setText("Logout: " + feedItem.getLogoutTime());
+			holder.noOfHours.setText("Hours: " + feedItem.getNoOfHours());
+			if (feedItem.getNoOfHours().compareToIgnoreCase("9") < 0) {
+				holder.noOfHours.setTextColor(mContext.getResources().getColor(
+						R.color.red));
+			} else {
+				holder.noOfHours.setTextColor(mContext.getResources().getColor(
+						R.color.green));
+			}
 
 		}
 

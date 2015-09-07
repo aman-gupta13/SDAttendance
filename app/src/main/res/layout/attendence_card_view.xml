@@ -2,22 +2,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingLeft="10dp"
-              android:paddingRight="10dp"
-              android:paddingTop="10dp"
-    >
+              android:padding="4dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="5dp">
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/loginDate"
@@ -28,20 +24,32 @@
                 android:singleLine="true"
                 android:text="rockers"
                 android:textColor="#000000"
-                android:textSize="17sp"
-                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textStyle="bold|italic"
                 />
+
+            <TextView
+                android:id="@+id/location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:singleLine="true"
+                android:text="ASF Towers"
+                android:textColor="@color/green"
+                android:textSize="18sp"
+                />
+
 
             <TextView
                 android:id="@+id/logintime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/loginDate"
+                android:layout_marginTop="5dp"
                 android:singleLine="true"
                 android:text="rockers"
-                android:textColor="#000000"
                 android:textSize="17sp"
                 />
 
@@ -49,12 +57,11 @@
                 android:id="@+id/logoutTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/loginDate"
+                android:layout_alignBottom="@+id/logintime"
+                android:layout_alignParentRight="true"
                 android:layout_weight="1"
                 android:singleLine="true"
                 android:text="rockers"
-                android:textColor="#000000"
                 android:textSize="17sp"
                 />
 
@@ -64,11 +71,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/logintime"
-                android:layout_marginLeft="30dp"
-                android:layout_weight="1"
+                android:layout_marginTop="5dp"
                 android:singleLine="true"
                 android:text="rockers"
-                android:textColor="#000000"
                 android:textSize="17sp"
                 />
 

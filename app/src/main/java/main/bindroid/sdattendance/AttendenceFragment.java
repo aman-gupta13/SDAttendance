@@ -13,13 +13,17 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import main.bindroid.sdattendance.utills.CommonUtils;
@@ -32,11 +36,11 @@ import main.bindroid.sdattendance.utills.CommonUtils;
  */
 public class AttendenceFragment extends Fragment {
 
-	private List<ParseObject> mObjects;
 	private RecyclerView recyclerView;
 	private AttendenceListAdapter adapter;
 	private List<AttendenceRowItem> list;
 	private Switch toggle;
+	private View mProgressBar;
 	private AttendenceTogleStateListener attendenceTogleStateListener;
 
 	/**
@@ -70,22 +74,56 @@ public class AttendenceFragment extends Fragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		recyclerView = (RecyclerView) getView()
-				.findViewById(R.id.recyclerviewAttendence);
+		recyclerView = (RecyclerView) getView().findViewById(
+				R.id.recyclerviewAttendence);
+		mProgressBar = (View) getView().findViewById(R.id.materialLoader);
 		LayoutManager layoutManager = new LinearLayoutManager(getActivity());
 		recyclerView.setLayoutManager(layoutManager);
 
 		list = new ArrayList<AttendenceRowItem>();
 		adapter = new AttendenceListAdapter(getActivity(), list);
 		recyclerView.setAdapter(adapter);
+		ParseQuery.getQuery("SDLoginData").fromLocalDatastore()
+				.findInBackground(new FindCallback<ParseObject>() {
+
+					@Override
+					public void
+							done(List<ParseObject> objects, ParseException e) {
+						if (e == null && objects.size() > 0) {
+							for (int i = 0; i < objects.size(); i++) {
+								ParseObject userObject = objects.get(i);
+								Log.d("Parse Obj Date",
+										"" + userObject.getCreatedAt());
+								AttendenceRowItem item = new AttendenceRowItem();
+								item.setDate(DateFormat.getDateInstance(
+										DateFormat.LONG).format(
+										userObject.getCreatedAt())
+										+ " ("
+										+ new SimpleDateFormat("EE")
+												.format(userObject
+														.getCreatedAt()) + ")");
+								item.setLoginTime(userObject.getCreatedAt()
+										.getHours()
+										+ ":"
+										+ userObject.getCreatedAt()
+												.getMinutes());
+								item.setLogoutTime(userObject.getUpdatedAt()
+										.getHours()
+										+ ":"
+										+ userObject.getUpdatedAt()
+												.getMinutes());
+								item.setNoOfHours(userObject
+										.getString("WorkHours"));
+								list.clear();
+								list.add(item);
+							}
+							Collections.sort(list);
+							adapter.notifyDataSetChanged();
+						} else
+							mProgressBar.setVisibility(View.VISIBLE);
+					}
+				});
 		callNetworkRequestForData();
-
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-
 	}
 
 	@Override
@@ -103,40 +141,53 @@ public class AttendenceFragment extends Fragment {
 				attendenceTogleStateListener.onTogleStateChange(b);
 			}
 		});
-		if (getActivity()
-				.getSharedPreferences("SDAttendance", Context.MODE_PRIVATE)
-				.getBoolean("service", false)) {
+		if (getActivity().getSharedPreferences("SDAttendance",
+				Context.MODE_PRIVATE).getBoolean("service", false)) {
 			toggle.setChecked(true);
 		}
 		return view;
 	}
 
 	private void callNetworkRequestForData() {
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("SDLoginData");
-		query.whereEqualTo("EmpCode",
-				CommonUtils.getLoggedInUser(getActivity()).getEmpCode());
+
+		ParseQuery<ParseObject> query = ParseQuery
+				.getQuery("SDLoginData")
+				.whereEqualTo("EmpCode",
+						CommonUtils.getLoggedInUser(getActivity()).getEmpCode());
 		query.findInBackground(new FindCallback<ParseObject>() {
 
 			@Override
 			public void done(List<ParseObject> objects, ParseException e) {
 				Log.d("object size", "" + objects.size());
+				ParseObject.pinAllInBackground(objects);
+				mProgressBar.setVisibility(View.GONE);
 				if (e == null && objects.size() > 0) {
-					mObjects = objects;
 					// Todo: update your recycler adapter
-
 					for (int i = 0; i < objects.size(); i++) {
 						ParseObject userObject = objects.get(i);
+						Log.d("Parse Obj Date", "" + userObject.getCreatedAt());
 						AttendenceRowItem item = new AttendenceRowItem();
-						item.setDate(userObject.getString("LoginDate"));
-						item.setLoginTime(userObject.getString("LoginTime"));
-						item.setLogoutTime(userObject.getString("LogoutTime"));
+						item.setDate(DateFormat
+								.getDateInstance(DateFormat.LONG).format(
+										userObject.getCreatedAt()));
+						// + " ("
+						// + new SimpleDateFormat("EE").format(userObject
+						// .getCreatedAt()) + ")");
+						item.setLoginTime(userObject.getCreatedAt().getHours()
+								+ ":" + userObject.getCreatedAt().getMinutes());
+						item.setLogoutTime(userObject.getUpdatedAt().getHours()
+								+ ":" + userObject.getUpdatedAt().getMinutes());
 						item.setNoOfHours(userObject.getString("WorkHours"));
+						list.clear();
 						list.add(item);
-						adapter.notifyDataSetChanged();
 					}
-
+					Collections.sort(list);
+					adapter.notifyDataSetChanged();
 				} else {
 					// Todo: no data fetched
+					Toast.makeText(getActivity(),
+							"Sorry!! We don't have any records for you!",
+							Toast.LENGTH_LONG).show();
 				}
 			}
 		});

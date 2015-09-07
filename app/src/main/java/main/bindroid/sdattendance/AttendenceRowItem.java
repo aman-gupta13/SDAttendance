@@ -3,7 +3,7 @@ package main.bindroid.sdattendance;
 /**
  * Created by vikassinghsuriyal on 9/4/15.
  */
-public class AttendenceRowItem {
+public class AttendenceRowItem implements Comparable<AttendenceRowItem> {
 
 	private String date;
 	private String loginTime;
@@ -42,5 +42,10 @@ public class AttendenceRowItem {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	@Override
+	public int compareTo(AttendenceRowItem another) {
+		return another.getDate().compareToIgnoreCase(getDate());
 	}
 }
