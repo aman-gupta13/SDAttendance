@@ -8,7 +8,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.support.v4.app.NotificationCompat;
@@ -23,8 +22,8 @@ import com.parse.ParseException;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
-import com.parse.SaveCallback;
 
+import java.text.DateFormat;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -55,26 +54,20 @@ public class MyService extends Service {
 		pref = getApplicationContext().getSharedPreferences("keyData",
 				Context.MODE_PRIVATE);
 		loginId = pref.getString("key", "");
-
 		mRegion = new Region(Globals.REGION, Globals.PROXIMITY_UUID,
 				Globals.MAJOR, Globals.MINOR);
-
 		mPreferences = getApplicationContext().getSharedPreferences(
 				"preferences", Activity.MODE_PRIVATE);
-
 		// User this to receive notification from all iBeacons
 		// mRegion = new Region(Globals.WHOS_FANCY_REGION, PROXIMITY_UUID, null,
 		// null);
-
 		mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 		mBeaconManager = new BeaconManager(this);
-
 		// Default values are 5s of scanning and 25s of waiting time to save CPU
 		// cycles.
 		// In order for this demo to be more responsive and immediate we lower
 		// down those values.
 		mBeaconManager.setBackgroundScanPeriod(TimeUnit.SECONDS.toMillis(1), 0);
-
 		mBeaconManager
 				.setMonitoringListener(new BeaconManager.MonitoringListener() {
 
@@ -82,88 +75,46 @@ public class MyService extends Service {
 					public void onEnteredRegion(final Region region,
 							List<Beacon> beacons) {
 						postNotification(getString(R.string.status_entered_region));
-						loginId = pref.getString("key", "");
-						if (loginId.equalsIgnoreCase("") || loginId == null
-								|| loginId.equalsIgnoreCase("null")) {
-							final ParseObject loginData = new ParseObject(
-									"SDLoginData");
-							ParseACL acl = new ParseACL(ParseUser
-									.getCurrentUser());
-							acl.getPublicReadAccess();
-							acl.getPublicWriteAccess();
-							loginData.setACL(acl);
-							loginData.put("EmpCode", CommonUtils
-									.getLoggedInUser(getApplicationContext())
-									.getEmpCode());
-							loginData.put("LoginDate", CommonUtils
-									.getDate(System.currentTimeMillis()));
-							loginData.put("LoginTime",
-									CommonUtils.getCurrentTime());
-							loginData.put("LogoutTime", "00:00");
-							loginData.put("WorkHours", "00:00");
-							loginData.saveInBackground(new SaveCallback() {
 
-								public void done(ParseException e) {
-									if (e == null) {
-										// Saved successfully.
-										Editor edit = pref.edit();
-										String objId = loginData.getObjectId();
-										edit.putString("key", objId);
-										edit.commit();
-									} else {
-										// The save failed.
-										Log.d(TAG, "Error updating user data: "
-												+ e);
-									}
-								}
-							});
+						ParseQuery<ParseObject> parseQuery = ParseQuery
+								.getQuery("SDLoginData");
+						parseQuery.whereEqualTo("EmpCode", CommonUtils
+								.getLoggedInUser(getApplicationContext())
+								.getEmpCode());
+						parseQuery
+								.findInBackground(new FindCallback<ParseObject>() {
 
-						} else {
-							ParseQuery<ParseObject> parseQuery = ParseQuery
-									.getQuery("SDLoginData");
-							parseQuery.whereEqualTo("objectId", loginId);
-							parseQuery
-									.findInBackground(new FindCallback<ParseObject>() {
-
-										@Override
-										public void done(
-												List<ParseObject> objects,
-												ParseException e) {
-											if (e == null && objects != null
-													&& objects.size() > 0) {
-												objects.get(0)
-														.put("LogoutTime",
+									@Override
+									public void done(List<ParseObject> objects,
+											ParseException e) {
+										boolean isCreateNew = false;
+										if (e == null && objects.size() > 0) {
+											for (ParseObject obj : objects) {
+												if (DateFormat
+														.getDateInstance(
+																DateFormat.LONG)
+														.format(obj
+																.getCreatedAt())
+														.equalsIgnoreCase(
 																CommonUtils
-																		.getCurrentTime());
-												objects.get(0)
-														.put("WorkHours",
-																CommonUtils
-																		.getMinTime(
-																				CommonUtils
-																						.getCurrentTime(),
-																				objects.get(
-																						0)
-																						.getString(
-																								"LoginTime")));
-												objects.get(0)
-														.saveInBackground();
-												int dayCreated = objects.get(0)
-														.getCreatedAt()
-														.getDay();
-												int dayUpdated = objects.get(0)
-														.getUpdatedAt()
-														.getDay();
-												if (dayCreated - dayUpdated != 0) {
-													Editor edit = pref.edit();
-													edit.putString("key", "");
-													edit.commit();
+																		.getDate(System
+																				.currentTimeMillis()))) {
+													obj.put("WorkHours",
+															getWorkHours(obj));
+													obj.saveInBackground();
+													return;
+												} else {
+													isCreateNew = true;
 												}
 											}
+											if (isCreateNew) {
+												createNewLoginDataUser();
+											}
+										} else if (objects.size() == 0) {
+											createNewLoginDataUser();
 										}
-									});
-
-						}
-
+									}
+								});
 					}
 
 					@Override
@@ -171,6 +122,26 @@ public class MyService extends Service {
 						// postNotification(getString(R.string.status_exited_region));
 					}
 				});
+	}
+
+	private void createNewLoginDataUser() {
+		ParseObject loginData = new ParseObject("SDLoginData");
+		ParseACL acl = new ParseACL(ParseUser.getCurrentUser());
+		acl.setPublicReadAccess(true);
+		acl.setPublicWriteAccess(true);
+		loginData.setACL(acl);
+		loginData.put("EmpCode",
+				CommonUtils.getLoggedInUser(getApplicationContext())
+						.getEmpCode());
+		loginData.put("WorkHours", "0.0");
+		loginData.saveInBackground();
+	}
+
+	private String getWorkHours(ParseObject user) {
+		return CommonUtils.getMinTime(CommonUtils.getCurrentTime24Hours(), user
+				.getCreatedAt().getHours()
+				+ ":"
+				+ user.getCreatedAt().getMinutes());
 	}
 
 	@Override

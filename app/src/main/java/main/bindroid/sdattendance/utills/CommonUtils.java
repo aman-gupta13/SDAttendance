@@ -109,7 +109,7 @@ public class CommonUtils {
 
 	public static String getCurrentTime() {
 		final Calendar c = Calendar.getInstance();
-		SimpleDateFormat format = new SimpleDateFormat("h:mm a", Locale.US);
+		SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.US);
 		format.setTimeZone(c.getTimeZone());
 
 		String myFormatted_time = format.format(c.getTime());
@@ -119,7 +119,7 @@ public class CommonUtils {
 
 	public static String getCurrentTime24Hours() {
 		final Calendar c = Calendar.getInstance();
-		SimpleDateFormat format = new SimpleDateFormat("h:mm", Locale.US);
+		SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.US);
 		format.setTimeZone(c.getTimeZone());
 
 		String myFormatted_time = format.format(c.getTime());
@@ -130,7 +130,7 @@ public class CommonUtils {
 	public static String getMinTime(String lastTime, String startTime) {
 		String time = "";
 		try {
-			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+			SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm");
 			Date date1 = simpleDateFormat.parse(startTime);
 			Date date2 = simpleDateFormat.parse(lastTime);
 			long difference;
@@ -145,7 +145,7 @@ public class CommonUtils {
 					/ (1000 * 60);
 			hours = (hours < 0 ? -hours : hours);
 			Log.e("log_tag", "Hours: " + hours + ", Mins: " + min);
-			time = hours + ":" + min;
+			time = hours + "." + min;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -154,15 +154,9 @@ public class CommonUtils {
 
 	public static String getDate(Long milisecond) {
 		if (milisecond == null || milisecond == 0)
-
 			return "";
 		Date date = new Date(milisecond);
-		String stringMonth = (String) android.text.format.DateFormat.format(
-				"MMM", date);
-		String year = (String) android.text.format.DateFormat.format("yyyy",
-				date);
-		String day = (String) android.text.format.DateFormat.format("dd", date);
-		return day + " " + stringMonth + " " + year;
+		return DateFormat.getDateInstance(DateFormat.LONG).format(date);
 	}
 
 	public static String getTime(Long mili) {

@@ -4,25 +4,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-
-
-    >
+    android:padding="5dp">
 
     <android.support.v7.widget.CardView
         android:id="@+id/cv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-
-        >
+        android:layout_height="wrap_content">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:paddingTop="10dp"
-            >
+            android:paddingTop="10dp">
 
             <ImageView
                 android:id="@+id/person_photo"
@@ -31,8 +25,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="16dp"
-                android:src="@drawable/profile"
-                />
+                android:src="@drawable/profile"/>
 
             <TextView
                 android:id="@+id/person_name"
@@ -43,8 +36,7 @@
                 android:singleLine="true"
                 android:text="rockers"
                 android:textColor="#000000"
-                android:textSize="17sp"
-                />
+                android:textSize="17sp"/>
 
             <TextView
                 android:id="@+id/person_department"
@@ -70,11 +62,11 @@
 
             <ImageView
                 android:id="@+id/phone"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:padding="2dp"
                 android:layout_below="@+id/person_email"
                 android:layout_toRightOf="@+id/person_photo"
-                android:paddingTop="5dp"
                 android:src="@drawable/phone"
                 />
 
@@ -84,38 +76,29 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/person_email"
                 android:layout_toRightOf="@+id/phone"
-                android:gravity="center_vertical"
-                android:padding="3dp"
+                android:gravity="center"
+                android:padding="2dp"
                 android:text="+911244330082"
-                android:textSize="13sp"
-
-                />
-
-            <!--<View
-                android:layout_width="1dp"
-                android:layout_height="15dp"
-                android:layout_below="@+id/person_department"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="4dp"
-                android:layout_toRightOf="@+id/person_mobile"
-                android:background="@color/LightGray"></View>-->
+                android:textSize="13sp"/>
 
             <ImageView
                 android:id="@+id/seat"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-
+                android:layout_width="20dp"
+                android:layout_height="18dp"
+                android:foregroundGravity="center"
                 android:layout_below="@+id/person_email"
                 android:layout_toLeftOf="@+id/person_seat"
-                android:src="@drawable/furniture"
-                />
+                android:layout_marginRight="4dp"
+                android:src="@drawable/seat"/>
 
             <TextView
                 android:id="@+id/person_seat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/person_mobile"
                 android:layout_alignParentRight="true"
                 android:layout_below="@+id/person_email"
+                android:gravity="bottom"
                 android:text="afasd"
                 android:textSize="13sp"
                 />
@@ -124,20 +107,42 @@
                 android:id="@+id/telephone"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
-
+                android:layout_alignBottom="@+id/person_ext"
                 android:layout_below="@+id/person_mobile"
                 android:layout_toRightOf="@+id/person_photo"
-                android:src="@drawable/telephone"
-                />
+                android:src="@drawable/telephone"/>
 
             <TextView
                 android:id="@+id/person_ext"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="top"
-                android:layout_toRightOf="@+id/telephone"
                 android:layout_below="@+id/person_mobile"
+                android:layout_toRightOf="@+id/telephone"
+                android:gravity="center_vertical"
                 android:padding="3dp"
+                android:text="afasd"
+                android:textSize="13sp"
+                />
+
+            <ImageView
+                android:id="@+id/emp_code_iv"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignBottom="@+id/person_ext"
+                android:layout_below="@+id/person_seat"
+                android:layout_toLeftOf="@+id/emp_code"
+                android:layout_marginRight="4dp"
+                android:src="@drawable/code"
+                />
+
+            <TextView
+                android:id="@+id/emp_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/person_ext"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/person_seat"
+                android:gravity="bottom"
                 android:text="afasd"
                 android:textSize="13sp"
                 />

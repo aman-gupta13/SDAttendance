@@ -64,7 +64,7 @@ public class BasicListAdapter extends RecyclerView.Adapter<CustomViewHolder> {
 				}
 			});
 			holder.email.setText(feedItem.getEmpEmail());
-
+			holder.id.setText(feedItem.getEmpId());
 		}
 
 	}
