@@ -90,31 +90,19 @@ public class AttendenceFragment extends Fragment {
 					public void
 							done(List<ParseObject> objects, ParseException e) {
 						if (e == null && objects.size() > 0) {
+							list.clear();
 							for (int i = 0; i < objects.size(); i++) {
 								ParseObject userObject = objects.get(i);
-								Log.d("Parse Obj Date",
-										"" + userObject.getCreatedAt());
+								Log.d("Parse Obj Date", "" + userObject.getCreatedAt());
 								AttendenceRowItem item = new AttendenceRowItem();
-								item.setDate(DateFormat.getDateInstance(
-										DateFormat.LONG).format(
-										userObject.getCreatedAt())
-										+ " ("
-										+ new SimpleDateFormat("EE")
-												.format(userObject
-														.getCreatedAt()) + ")");
-								item.setLoginTime(userObject.getCreatedAt()
-										.getHours()
-										+ ":"
-										+ userObject.getCreatedAt()
-												.getMinutes());
-								item.setLogoutTime(userObject.getUpdatedAt()
-										.getHours()
-										+ ":"
-										+ userObject.getUpdatedAt()
-												.getMinutes());
-								item.setNoOfHours(userObject
-										.getString("WorkHours"));
-								list.clear();
+								item.setDate(DateFormat.getDateInstance(DateFormat.LONG)
+										.format(userObject.getCreatedAt()) + " (" +
+										new SimpleDateFormat("EE").format(userObject.getCreatedAt()) + ")");
+								item.setLoginTime(userObject.getCreatedAt().getHours() + ":" +
+										userObject.getCreatedAt().getMinutes());
+								item.setLogoutTime(userObject.getUpdatedAt().getHours() + ":" +
+										userObject.getUpdatedAt().getMinutes());
+								item.setNoOfHours(userObject.getString("WorkHours"));
 								list.add(item);
 							}
 							Collections.sort(list);
@@ -162,23 +150,20 @@ public class AttendenceFragment extends Fragment {
 				ParseObject.pinAllInBackground(objects);
 				mProgressBar.setVisibility(View.GONE);
 				if (e == null && objects.size() > 0) {
+					list.clear();
 					// Todo: update your recycler adapter
 					for (int i = 0; i < objects.size(); i++) {
 						ParseObject userObject = objects.get(i);
 						Log.d("Parse Obj Date", "" + userObject.getCreatedAt());
 						AttendenceRowItem item = new AttendenceRowItem();
-						item.setDate(DateFormat
-								.getDateInstance(DateFormat.LONG).format(
-										userObject.getCreatedAt())
-								+ " ("
-								+ new SimpleDateFormat("EE").format(userObject
-										.getCreatedAt()) + ")");
-						item.setLoginTime(userObject.getCreatedAt().getHours()
-								+ ":" + userObject.getCreatedAt().getMinutes());
-						item.setLogoutTime(userObject.getUpdatedAt().getHours()
-								+ ":" + userObject.getUpdatedAt().getMinutes());
+						item.setDate(DateFormat.getDateInstance(DateFormat.LONG)
+								.format(userObject.getCreatedAt()) + " (" +
+								new SimpleDateFormat("EE").format(userObject.getCreatedAt()) + ")");
+						item.setLoginTime(userObject.getCreatedAt().getHours() + ":" +
+								userObject.getCreatedAt().getMinutes());
+						item.setLogoutTime(userObject.getUpdatedAt().getHours() + ":" +
+								userObject.getUpdatedAt().getMinutes());
 						item.setNoOfHours(userObject.getString("WorkHours"));
-						list.clear();
 						list.add(item);
 					}
 					Collections.sort(list);

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="10dp">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/name_et_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/fullname"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Full Name"
+            android:inputType="textPersonName|textCapWords|textNoSuggestions"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/code_et_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/empCodeEt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Employee Code"
+            android:inputType="number|textNoSuggestions"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dept_et_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/empDeptEt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Department"
+            android:inputType="textPersonName|textNoSuggestions"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/seat_et_til"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin">
+
+        <EditText
+            android:id="@+id/empSeatEt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:hint="Employee Seat No."
+            android:inputType="textPersonName|textCapWords|textNoSuggestions"/>
+    </android.support.design.widget.TextInputLayout>
+
+    <!--<android.support.v7.widget.CardView-->
+        <!--android:id="@+id/signInsignUpView"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginTop="25dp"-->
+        <!--app:cardBackgroundColor="@color/theme_accent"-->
+        <!--app:cardCornerRadius="@dimen/get_customer_id_corner_radius">-->
+
+
+        <!--<TextView-->
+            <!--android:id="@+id/registerTv"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:paddingBottom="5dp"-->
+            <!--android:paddingLeft="10dp"-->
+            <!--android:paddingRight="10dp"-->
+            <!--android:paddingTop="5dp"-->
+            <!--android:text="Register"-->
+            <!--android:textColor="@color/white"-->
+            <!--android:textSize="20sp"/>-->
+
+    <!--</android.support.v7.widget.CardView>-->
+
+</LinearLayout>
