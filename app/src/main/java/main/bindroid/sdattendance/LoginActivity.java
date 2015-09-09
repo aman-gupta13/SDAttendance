@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 
 	private ImageView snapdealImageView;
 	private LinearLayout mainLinearLayout;
-	private TextView getInText;
+	private TextView getInText, register;
 	private EditText empCodeET;
 	private View mProgressBar;
 
@@ -59,15 +59,17 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 		mainLinearLayout = (LinearLayout) findViewById(R.id.mainLinear);
 		getInText = (TextView) findViewById(R.id.getInTv);
 		empCodeET = (EditText) findViewById(R.id.empCodeET);
+		register = (TextView) findViewById(R.id.registerTvinLogin);
 		mProgressBar = (View) findViewById(R.id.materialLoader);
 
 		getInText.setOnClickListener(this);
+		register.setOnClickListener(this);
 
 		showStartUpAnimation();
 	}
 
-	public void onRegisterClick(View view) {
-		final AlertDialog.Builder builder = new Builder(this);
+	private void onRegisterClick() {
+		AlertDialog.Builder builder = new Builder(this);
 		builder.setTitle("Register Your Details");
 		View v = LayoutInflater.from(this).inflate(R.layout.layout_register,
 				null);
@@ -212,7 +214,15 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener 
 	@Override
 	public void onClick(View view) {
 		CommonUtils.hideKeypad(this, empCodeET);
-		validateDataFromDB();
+
+		switch (view.getId()) {
+			case R.id.registerTvinLogin :
+				onRegisterClick();
+				break;
+			case R.id.getInTv :
+				validateDataFromDB();
+				break;
+		}
 	}
 
 	public void validateDataFromDB() {
